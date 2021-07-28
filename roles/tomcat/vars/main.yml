@@ -1,0 +1,55 @@
+---
+# vars file for tomcat - latest/default is set after consideration of impact and testing
+# other versions should be considered as options in special circumstances where the default
+# is not an option.
+tomcat_versions:
+  9.0.22:
+    major_version: 9
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/9/apache-tomcat-9.0.22.tar.gz'
+    md5: a4c4cab01abb65cf9b9bfeb383dc5120
+    version_number: '9.0.22'
+  9.0.31:
+    major_version: 9
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/9/apache-tomcat-9.0.31.tar.gz'
+    md5: 0ea73dd9d4b94663474117ab4e171524
+    version_number: '9.0.31'
+  latest:
+    major_version: 8
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/8/apache-tomcat-8.5.20.zip'
+    md5: 827fb063bcac90d9a5ce0e9397041e92
+    version_number: '8.5.20'
+  8.5.20:
+    major_version: 8
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/8/apache-tomcat-8.5.20.zip'
+    md5: 827fb063bcac90d9a5ce0e9397041e92
+    version_number: '8.5.20'
+  8.5.51:
+    major_version: 8
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/8/apache-tomcat-8.5.51.zip'
+    md5: 7c45e016dc3f17169938d78a5efa64c0
+    version_number: '8.5.51'
+  8.5.60:
+    major_version: 8
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/8/apache-tomcat-8.5.60.zip'
+    md5: 9d085e275dab906a501d643ececb44a0
+    version_number: '8.5.60'
+  7.0.70:
+    major_version: 7
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/7/apache-tomcat-7.0.70.zip'
+    md5:  2e3c0999b2e495907d4ea98a70486168
+    version_number: '7.0.70'
+  7.0.82:
+    major_version: 7
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/7/apache-tomcat-7.0.82.tar.gz'
+    md5:  b9c07fb4f37063e9e8185972b3f88a98
+    version_number: '7.0.82'
+  7.0.88:
+    major_version: 7
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/7/apache-tomcat-7.0.88.tar.gz'
+    md5:  ed624bde21e1f120e0052a47f295fde6
+    version_number: '7.0.88'
+  7.0.100:
+    major_version: 7
+    url: 'http://apps.nrs.gov.bc.ca/pub/artifactory/ext-binaries-local/org/apache/tomcat/7/apache-tomcat-7.0.100.tar.gz'
+    md5:  79be4ba5a6e770730a4be3d5cb3c7862
+    version_number: '7.0.100'

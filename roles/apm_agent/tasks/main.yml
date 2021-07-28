@@ -1,0 +1,135 @@
+---
+- import_role:
+    name: hashicorp_envconsul
+- import_role:
+    name: hashicorp_vault
+- import_role:
+    name: s6
+- import_role:
+    name: jq
+- name: Check for vault broker token
+  assert:
+    that:
+      - vault_broker_token | default('') | length > 0 
+    msg: 'Vault broker token variable must not be empty'
+  tags:
+  - molecule-notest
+
+- name: Check for fluent-bit service
+  stat:
+    path: /apps_ux/s6_services/fluent-bit/run
+  register: fluent_bit_run
+  become: yes
+  become_user: wwwadm
+  tags:
+  - uninstall
+
+- name: Stop fluent-bit
+  include_role:
+    name: tomcat_stop
+    apply:
+      tags: uninstall
+  when: fluent_bit_run.stat.exists
+  tags:
+  - uninstall
+
+- name: Remove agent home
+  file:
+    state: absent
+    path: '{{ apm_agent_home }}'
+  become: yes
+  become_user: wwwadm
+  tags:
+  - never
+  - uninstall
+
+- name: Create app directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0775'
+  loop:
+    - '{{ apm_agent_home }}'
+    - '{{ apm_agent_home }}/bin'
+    - '{{ apm_agent_home }}/conf'
+    - '{{ apm_agent_home }}/db'
+    - '{{ apm_agent_home }}/lib'
+    - '{{ apm_agent_home }}/logs'
+  become: yes
+  become_user: wwwadm
+
+- name: Create s6 directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0775'
+  loop:
+    - '{{ apm_agent.service_dir }}'
+  become: yes
+  become_user: wwwadm
+
+- name: Download files
+  get_url:
+    url: '{{ item }}'
+    url_username: '{{ artifactory_user }}'
+    url_password: '{{ artifactory_pass }}'
+    dest: '/tmp/{{ item | basename }}'
+    mode: '0644'
+  loop:
+    - '{{ apm_agent.url.zip }}'
+  become: yes
+  become_user: wwwadm
+  no_log: True
+
+- name: Extract bin
+  unarchive:
+    src: '/tmp/{{ apm_agent.url.zip | basename }}'
+    dest: '{{ apm_agent_home }}/bin'
+    remote_src: yes
+    exclude: 'fluent-bit/libpq.so.5'
+    extra_opts: [--strip-components=1]
+    mode: '0775'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+  
+- name: Extract lib
+  unarchive:
+    src: '/tmp/{{ apm_agent.url.zip | basename }}'
+    dest: '{{ apm_agent_home }}/lib'
+    remote_src: yes
+    exclude: fluent-bit/fluent-bit
+    extra_opts: [--strip-components=1]
+    mode: '0775'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+
+- name: Configuration files
+  copy:
+    src: 'conf'
+    dest: '{{ apm_agent_home }}'
+    mode: '0664'
+  become: yes
+  become_user: wwwadm
+
+- name: Executable files
+  copy:
+    src: 'bin'
+    dest: '{{ apm_agent_home }}'
+    mode: '0775'
+  become: yes
+  become_user: wwwadm
+
+- name: envconsul configuration file
+  template:
+    src: 'templates/{{ item }}'
+    dest: '{{ apm_agent_home }}/{{ item }}'
+    mode: '0664'
+  become: yes
+  become_user: wwwadm
+  loop:
+    - conf/fluent-bit.hcl
+    
+- name: Add run file
+  import_tasks: add-run-file.yml

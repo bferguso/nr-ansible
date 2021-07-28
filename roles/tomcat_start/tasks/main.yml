@@ -1,0 +1,7 @@
+---
+- debug:
+    msg: "start Tomcat app {{ cd_app_service }}"
+  changed_when: true
+  notify: start tomcat - s6
+
+- meta: flush_handlers

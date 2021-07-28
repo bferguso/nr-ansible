@@ -1,0 +1,53 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: no
+  become_method: su
+  vars:
+    proxy_env: {}
+    is_integration_test: true
+  tasks:
+    # - debug:
+    #     var: hostvars[inventory_hostname]
+    #     verbosity: 0
+    - name: Ensure group "wwwadm" exists
+      ansible.builtin.group:
+        name: wwwadm
+        state: present
+    - name: Ensure user 'wwwadm' exists
+      ansible.builtin.user:
+        name: wwwadm
+        comment: wwwadm
+        uid: 1040
+        group: wwwadm
+    - name: Ensure user 'wwwsvr' exists
+      ansible.builtin.user:
+        name: wwwsvr
+        comment: wwwsvr
+        uid: 1041
+        group: wwwadm
+    - name: Create /sw_ux
+      ansible.builtin.file:
+        path: /sw_ux
+        state: directory
+        mode: '0775'
+        owner: wwwadm
+        group: wwwadm
+    - name: Create /apps_ux
+      ansible.builtin.file:
+        path: /apps_ux
+        state: directory
+        mode: '0775'
+        owner: wwwadm
+        group: wwwadm
+    - name: Install Packages
+      ansible.builtin.package:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - unzip
+        - hostname
+        - iproute
+    - name: "Include metrics collector"
+      include_role:
+        name: "bcgov.nr.apm_metrics_collector"

@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: 3226118d-${MOLECULE_SCENARIO_NAME:-default}
+    image: registry.access.redhat.com/ubi7/ubi:7.9-405
+    pre_build_image: true
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      group_vars: ../../tests/inventory/group_vars/
+verifier:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8

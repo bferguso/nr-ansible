@@ -1,0 +1,54 @@
+---
+- name: Create /sw_ux/s6 directory
+  file:
+    path: "/sw_ux/s6"
+    state: directory
+    mode: '0755'
+  become: yes
+  become_user: wwwadm
+
+- name: Download s6
+  environment: '{{ proxy_env }}'
+  get_url:
+    url: "https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz"
+    dest: "/tmp/s6-overlay-amd64-v2.2.0.3.tar.gz"
+    mode: '0644'
+    use_proxy: yes
+  become: yes
+  become_user: wwwadm
+
+- name: Extract s6
+  unarchive:
+    src: "/tmp/s6-overlay-amd64-v2.2.0.3.tar.gz"
+    dest: "/sw_ux/s6"
+    remote_src: yes
+    mode: '0755'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+
+- name: Create s6 service directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/apps_ux/s6_services"
+  become: yes
+  become_user: wwwadm
+- name: Create /apps_ux/s6_services state directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0775'
+  loop:
+    - "/apps_ux/s6_services/.s6-svscan"
+  become: yes
+  become_user: wwwadm
+# s6-svscanctl should have a 'finish' script.  It doesn't do anything, though.
+# ----------------------------------------------------------------------------
+- name: s6-svscanctl finish script
+  copy:
+    src: finish
+    dest: "/apps_ux/s6_services/.s6-svscan/finish"
+  become: yes
+  become_user: wwwsvr

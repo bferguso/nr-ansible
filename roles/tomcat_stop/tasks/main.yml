@@ -1,0 +1,7 @@
+---
+- debug:
+    msg: "stop Tomcat app {{ cd_app_service }}"
+  changed_when: true
+  notify: stop tomcat - s6
+
+- meta: flush_handlers

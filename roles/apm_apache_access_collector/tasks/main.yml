@@ -1,0 +1,58 @@
+---
+- name: Check for fluent-bit service
+  stat:
+    path: /apps_ux/s6_services/fluent-bit/run
+  register: fluent_bit_run
+  become: yes
+  become_user: wwwadm
+  tags:
+  - uninstall
+
+- name: Stop fluent-bit
+  include_role:
+    name: tomcat_stop
+    apply:
+      tags: uninstall
+  when: fluent_bit_run.stat.exists
+  tags:
+  - uninstall
+
+- name: Create apache conf directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ apm_agent_home }}/conf/apache'
+    - '{{ apm_agent_home }}/conf/apache/filter'
+    - '{{ apm_agent_home }}/conf/apache/input'
+    - '{{ apm_agent_home }}/conf/apache/parser'
+  become: yes
+  become_user: wwwadm
+
+- name: Configuration files
+  copy:
+    src: 'conf'
+    dest: '{{ apm_agent_home }}'
+    mode: '0644'
+  become: yes
+  become_user: wwwadm
+
+- name: Remove apache config
+  file:
+    state: absent
+    path: '{{ apm_agent_home }}/conf/apache'
+  become: yes
+  become_user: wwwadm
+  tags:
+  - never
+  - uninstall
+
+- name: Start fluent-bit
+  include_role:
+    name: tomcat_start
+    apply:
+      tags: uninstall
+  tags:
+  - molecule-notest
+  - uninstall

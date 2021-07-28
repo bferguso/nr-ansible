@@ -1,0 +1,29 @@
+---
+- name: Create /sw_ux/bin directory
+  file:
+    path: '/sw_ux/bin'
+    state: directory
+    mode: '0755'
+  become: yes
+  become_user: wwwadm
+
+- name: Download Hashicorp Envconsul
+  environment: '{{ proxy_env }}'
+  get_url:
+    url: 'https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip'
+    dest: '/tmp/envconsul_0.11.0_linux_amd64.zip'
+    checksum: 'sha256:https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_SHA256SUMS'
+    mode: '0644'
+    use_proxy: yes
+  become: yes
+  become_user: wwwadm
+
+- name: Extract Hashicorp Envconsul
+  unarchive:
+    src: '/tmp/envconsul_0.11.0_linux_amd64.zip'
+    dest: '/sw_ux/bin'
+    remote_src: yes
+    mode: '0755'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
