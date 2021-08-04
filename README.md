@@ -1,11 +1,9 @@
 <!-- PROJECT SHIELDS -->
 
-[![Contributors](https://img.shields.io/github/contributors/bcgov/nr-ansible/)](/../../graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/bcgov/nr-ansible/)](/../../network/members)
-[![Stargazers](https://img.shields.io/github/stars/bcgov/nr-ansible/)](/../../stargazers)
-[![Issues](https://img.shields.io/github/issues/bcgov/nr-ansible/)](/../../issues)
-[![MIT License](https://img.shields.io/github/license/bcgov/nr-ansible/)](/LICENSE.txt)
-[![Lifecycle](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+[![Contributors](https://img.shields.io/github/contributors/bcgov/nr-ansible.svg)](/../../graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/bcgov/nr-ansible.svg)](/../../issues)
+[![License](https://img.shields.io/github/license/bcgov/nr-ansible.svg)](./LICENSE.txt)
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 
 # Testing
