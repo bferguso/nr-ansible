@@ -29,5 +29,5 @@
   loop:
     - conf/fluent-bit.hcl
     
-- name: Add run file
+- name: Add env file
   import_tasks: add-env-file.yml
