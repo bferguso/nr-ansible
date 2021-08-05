@@ -61,6 +61,10 @@ COPY tmpConf/fluent-bit.conf \
      tmpConf/plugins.conf \
      /fluent-bit/etc/
 
+# NR configuration files
+COPY podman/fluent-bit/apm_agent/conf/* /fluent-bit/etc/
+COPY podman/fluent-bit/apm_metrics_collector/conf/ /fluent-bit/etc/metrics
+
 # Download, unzip and make envconsul executable
 ADD https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip /sw_ux/bin/envconsul
 RUN ls -la /sw_ux/
@@ -106,6 +110,7 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libffi* /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libcom_err* /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libkeyutils* /lib/x86_64-linux-gnu/
 
+COPY --from=builder /fluent-bit /fluent-bit
 
 COPY --from=builder /sw_ux/bin/envconsul /sw_ux/bin/envconsul
 
