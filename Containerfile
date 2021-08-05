@@ -50,11 +50,19 @@ RUN cmake -DFLB_RELEASE=On \
 RUN make -j $(getconf _NPROCESSORS_ONLN)
 RUN install bin/fluent-bit /fluent-bit/bin/
 
-COPY roles/apm_agent/files/conf/* /fluent-bit/etc/
+# Configuration files
+COPY conf/fluent-bit.conf \
+     conf/parsers.conf \
+     conf/parsers_ambassador.conf \
+     conf/parsers_java.conf \
+     conf/parsers_extra.conf \
+     conf/parsers_openstack.conf \
+     conf/parsers_cinder.conf \
+     conf/plugins.conf \
+     /fluent-bit/etc/
 
-ENV ENVCONSUL_LINK https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip
-
-ADD "${ENVCONSUL_LINK}" /sw_ux/bin/envconsul
+# Download, unzip and make envconsul executable
+ADD https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip /sw_ux/bin/envconsul
 RUN ls -la /sw_ux/
 RUN chmod 0755 /sw_ux/bin/envconsul
 
