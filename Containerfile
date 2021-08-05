@@ -51,14 +51,14 @@ RUN make -j $(getconf _NPROCESSORS_ONLN)
 RUN install bin/fluent-bit /fluent-bit/bin/
 
 # Configuration files
-COPY conf/fluent-bit.conf \
-     conf/parsers.conf \
-     conf/parsers_ambassador.conf \
-     conf/parsers_java.conf \
-     conf/parsers_extra.conf \
-     conf/parsers_openstack.conf \
-     conf/parsers_cinder.conf \
-     conf/plugins.conf \
+COPY tmpConf/fluent-bit.conf \
+     tmpConf/parsers.conf \
+     tmpConf/parsers_ambassador.conf \
+     tmpConf/parsers_java.conf \
+     tmpConf/parsers_extra.conf \
+     tmpConf/parsers_openstack.conf \
+     tmpConf/parsers_cinder.conf \
+     tmpConf/plugins.conf \
      /fluent-bit/etc/
 
 # Download, unzip and make envconsul executable
@@ -106,7 +106,6 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libffi* /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libcom_err* /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libkeyutils* /lib/x86_64-linux-gnu/
 
-COPY --from=builder /fluent-bit /fluent-bit
 
 COPY --from=builder /sw_ux/bin/envconsul /sw_ux/bin/envconsul
 
