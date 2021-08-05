@@ -52,6 +52,11 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 
 COPY roles/apm_agent/files/conf/* /fluent-bit/etc/
 
+ENV ENVCONSUL_LINK https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip
+
+ADD "${ENVCONSUL_LINK}" /sw_ux/bin/envconsul
+RUN ls -la /sw_ux/
+RUN chmod 0755 /sw_ux/bin/envconsul
 
 FROM gcr.io/distroless/cc-debian10
 LABEL Description="Fluent Bit docker image" Vendor="Fluent Organization" Version="1.1"
@@ -95,7 +100,8 @@ COPY --from=builder /lib/x86_64-linux-gnu/libkeyutils* /lib/x86_64-linux-gnu/
 
 COPY --from=builder /fluent-bit /fluent-bit
 
-#
+COPY --from=builder /sw_ux/bin/envconsul /sw_ux/bin/envconsul
+
 EXPOSE 2020
 
 ENV FLUENT_HOME /fluent-bit
