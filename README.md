@@ -1,3 +1,11 @@
+<!-- PROJECT SHIELDS -->
+
+[![Contributors](https://img.shields.io/github/contributors/bcgov/nr-ansible.svg)](/../../graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/bcgov/nr-ansible.svg)](/../../issues)
+[![License](https://img.shields.io/github/license/bcgov/nr-ansible.svg)](./LICENSE.txt)
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+
+
 # Testing
 ## Create a Scenario
 ```
