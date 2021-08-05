@@ -1,8 +1,4 @@
 ---
-- import_role:
-    name: hashicorp_vault
-- import_role:
-    name: jq
 - name: Check for vault broker token
   assert:
     that:
@@ -34,4 +30,4 @@
     - conf/fluent-bit.hcl
     
 - name: Add run file
-  import_tasks: add-run-file.yml
+  import_tasks: add-env-file.yml

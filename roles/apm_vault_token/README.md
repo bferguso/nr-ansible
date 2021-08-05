@@ -1,16 +1,10 @@
-Role Name: apm_agent
+Role Name: apm_vault_token
 =========
 
-This role deploys the base fluent bit install.
+This role deploys the Vault token and environment for the Fluent Bit agent.
 
 Requirements
 ------------
-
-The role requires the following binaries on the target server (these are installed automatically as dependencies):
-```
-    - /sw_ux/bin/envconsul
-    - /sw_ux/s6/bin/s6
-```
 
 For automatic retrieval of the broker token from Vault, you will also need the envconsul binary installed on the Ansible controller.  
 
@@ -40,8 +34,8 @@ Example Playbook
 This is an example playbook for deploying fluent bit:
 
 ```
-- name: deploy fluent-bit
-  hosts: fluent_bit
+- name: deploy fluent-bit token and environment
+  hosts: podman_servers
   gather_facts: false
 
   vars:
@@ -53,7 +47,7 @@ This is an example playbook for deploying fluent bit:
     vault_broker_token: "{{ lookup('env', 'VAULT_BROKER_TOKEN') }}"
 
   roles:
-    - role: apm_agent
+    - role: apm_vault_token
 ```
 
 First, logon to Vault (use an account with access to the broker token path):
@@ -66,15 +60,10 @@ export VAULT_TOKEN=$(vault login -method=oidc -format json | jq -r '.auth.client
 Do a dry-run:
 
 ```
-andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook playbooks/deploy-fluent-bit.yml -i inventory/dev/hosts.yml --check --diff
+andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook deploy-vault-token.yml -i inventory/dev/hosts.yml --check --diff
 ```
 
-Run the playbook for real, but only deploy to one server:
+Run the playbook for real:
 ```
-andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook playbooks/deploy-fluent-bit.yml -i inventory/dev/hosts.yml --limit skittles
-```
-
-Run the playbook for real, but deploy to both non-prod reverse proxy servers:
-```
-andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook playbooks/deploy-fluent-bit.yml -i inventory/dev/hosts.yml
+andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook deploy-vault-token.yml -i inventory/dev/hosts.yml
 ```

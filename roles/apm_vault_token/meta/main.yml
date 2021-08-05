@@ -1,4 +1,0 @@
----
-dependencies:
-  - name: hashicorp_vault
-  - name: jq
