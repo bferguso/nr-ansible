@@ -4,7 +4,7 @@ FROM amd64/debian:buster-slim as builder
 ENV FLB_MAJOR 1
 ENV FLB_MINOR 7
 ENV FLB_PATCH 1
-ENV FLB_VERSION 1.7.1
+ENV FLB_VERSION 1.7.1 
 
 ARG FLB_TARBALL=https://github.com/fluent/fluent-bit/archive/v$FLB_VERSION.tar.gz
 ENV FLB_SOURCE $FLB_TARBALL
@@ -33,7 +33,10 @@ RUN apt-get update && \
     && cd tmp/ && mkdir fluent-bit \
     && tar zxfv fluent-bit.tar.gz -C ./fluent-bit --strip-components=1 \
     && cd fluent-bit/build/ \
-    && rm -rf /tmp/fluent-bit/build/*
+    && rm -rf /tmp/fluent-bit/build/* \
+    && curl -sSL https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.tgz -o /tmp/envconsul_0.11.0_linux_amd64.tgz \
+    && tar -zxvf /tmp/envconsul_0.11.0_linux_amd64.tgz -C /usr/local/bin \
+    && rm /tmp/envconsul_0.11.0_linux_amd64.tgz
 
 WORKDIR /tmp/fluent-bit/build/
 RUN cmake -DFLB_RELEASE=On \
@@ -51,23 +54,15 @@ RUN make -j $(getconf _NPROCESSORS_ONLN)
 RUN install bin/fluent-bit /fluent-bit/bin/
 
 # Configuration files
-COPY tmpConf/fluent-bit.conf \
-     tmpConf/parsers.conf \
-     tmpConf/parsers_ambassador.conf \
-     tmpConf/parsers_java.conf \
-     tmpConf/parsers_extra.conf \
-     tmpConf/parsers_openstack.conf \
-     tmpConf/parsers_cinder.conf \
-     tmpConf/plugins.conf \
-     /fluent-bit/etc/
-
-# NR configuration files
-# COPY podman/fluent-bit/apm_agent/conf/* /fluent-bit/etc/
-COPY podman/fluent-bit/apm_metrics_collector/conf/ /fluent-bit/etc/metrics
-
-# Download, unzip and make envconsul executable
-ADD https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.zip /sw_ux/bin/envconsul
-RUN chmod 0755 /sw_ux/bin/envconsul
+# COPY tmpConf/fluent-bit.conf \
+#      tmpConf/parsers.conf \
+#      tmpConf/parsers_ambassador.conf \
+#      tmpConf/parsers_java.conf \
+#      tmpConf/parsers_extra.conf \
+#      tmpConf/parsers_openstack.conf \
+#      tmpConf/parsers_cinder.conf \
+#      tmpConf/plugins.conf \
+#      /fluent-bit/etc/
 
 # FROM gcr.io/distroless/cc-debian10
 # LABEL Description="Fluent Bit docker image" Vendor="Fluent Organization" Version="1.1"
