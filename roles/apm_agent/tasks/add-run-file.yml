@@ -137,6 +137,7 @@
   register: revoke_response
   when: previous_token.stdout | default('') | length > 0
   no_log: True
+  ignore_errors: True
   delegate_to: localhost
   tags:
   - molecule-notest
