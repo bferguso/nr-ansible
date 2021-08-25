@@ -104,7 +104,7 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libffi* /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libcom_err* /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libkeyutils* /lib/x86_64-linux-gnu/
 COPY --from=builder /fluent-bit /fluent-bit
-COPY --from=builder /sw_ux/bin/envconsul /sw_ux/bin/envconsul
+COPY --from=builder /usr/local/bin/envconsul /usr/local/bin/envconsul
 
 EXPOSE 2020
 
