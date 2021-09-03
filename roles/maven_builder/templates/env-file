@@ -1,0 +1,4 @@
+JENKINS_URL={{ jenkins_url }}
+JENKINS_AGENT_NAME={{ jenkins_agent_name }}
+JENKINS_AGENT_WORKDIR={{ jenkins_agent_workdir }}
+JENKINS_WEB_SOCKET={{ jenkins_web_socket }}

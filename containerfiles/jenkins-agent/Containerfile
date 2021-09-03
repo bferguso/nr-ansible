@@ -1,0 +1,17 @@
+FROM jenkins/inbound-agent:alpine as jnlp
+
+FROM maven:3.6.3-jdk-8-slim
+
+RUN apt-get update && \
+    apt-get install -y \
+        git \
+        libfontconfig1 \
+        libfreetype6 \
+        && curl -sSL https://releases.hashicorp.com/envconsul/0.11.0/envconsul_0.11.0_linux_amd64.tgz -o /tmp/envconsul_0.11.0_linux_amd64.tgz \
+        && tar -zxvf /tmp/envconsul_0.11.0_linux_amd64.tgz -C /usr/local/bin \
+        && rm /tmp/envconsul_0.11.0_linux_amd64.tgz
+
+COPY --from=jnlp /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-agent
+COPY --from=jnlp /usr/share/jenkins/agent.jar /usr/share/jenkins/agent.jar
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]

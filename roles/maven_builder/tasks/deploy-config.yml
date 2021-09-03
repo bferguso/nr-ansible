@@ -1,30 +1,4 @@
 ---
-- name: Check for env conf file
-  stat:
-    path: '{{ apm_agent_home }}/bin/.env'
-  register: vault_env_conf_file
-  become: yes
-  become_user: wwwadm
-
-- name: Make a backup of the env file
-  copy:
-    src: '{{ apm_agent_home }}/bin/.env'
-    dest: '{{ apm_agent_home }}/bin/.bak'
-    remote_src: yes
-  become: yes
-  become_user: wwwadm
-  when: vault_env_conf_file.stat.exists
-  diff: no
-
-- name: Get current token (to revoke later)
-  shell: cat {{ apm_agent_home }}/bin/.env | grep VAULT_TOKEN | awk -F '"' '{print $2}' 
-  register: previous_token
-  when: vault_env_conf_file.stat.exists
-  become: yes
-  become_user: wwwadm
-  check_mode: no
-  no_log: True
-
 - name: Get wrapped token
   uri:
     url: '{{ vault_addr }}/v1/auth/vs_apps_approle/role/{{ vault_approle }}/secret-id'
@@ -37,7 +11,7 @@
     status_code: 200
   register: wrapped_response
   when: not ansible_check_mode
-  no_log: True
+  # no_log: True
   delegate_to: localhost
   tags:
   - molecule-notest
@@ -90,36 +64,25 @@
   when: not ansible_check_mode
   delegate_to: localhost
 
-- name: .env configuration file
+- name: configuration files
   template:
-    src: templates/bin/.env
-    dest: '{{ apm_agent_home }}/bin/.env'
-    mode: '0775'
+    src: 'templates/{{ item }}'
+    dest: '{{ agent_home }}/{{ item }}'
+    mode: '0644'
   become: yes
   become_user: wwwadm
   when: not ansible_check_mode
   diff: no
+  loop:
+    - maven-builder.hcl
+    - env-file
 
-- name: Check previous token variable
-  assert:
-    that:
-      - previous_token.stdout | default('') | length > 0 
-    msg: 'Vault token variable must not be empty'
-  when: vault_env_conf_file.stat.exists
-  delegate_to: localhost
-  tags:
-  - molecule-notest
-
-- name: Revoke previous token
-  uri:
-    url: '{{ vault_addr }}/v1/auth/token/revoke-self'
-    method: POST
-    headers:
-      X-Vault-Token: '{{ previous_token.stdout }}'
-    status_code: 204
-  register: revoke_response
-  when: previous_token.stdout | default('') | length > 0
-  no_log: True
-  delegate_to: localhost
-  tags:
-  - molecule-notest
+- name: maven settings file
+  template:
+    src: templates/settings.xml
+    dest: '{{ agent_home }}/maven/.m2/settings.xml'
+    mode: '0644'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+  diff: no

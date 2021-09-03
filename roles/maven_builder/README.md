@@ -1,12 +1,12 @@
-Role Name: apm_vault_token
+Role Name: maven_builder
 =========
 
-This role deploys the Vault token and environment for the Fluent Bit agent.
+This role deploys configuration for Maven builder containers.
 
 Requirements
 ------------
 
-For automatic retrieval of the broker token from Vault, you will also need the envconsul binary installed on the Ansible controller.  
+At this time, the role only deploys configuration and expects a container image to be available.  
 
 Role Variables
 --------------
@@ -16,8 +16,6 @@ The role requires the following environment variables:
     - ssh_user: "{{ lookup('env', 'SSH_USER') }}"
     - ssh_pass: "{{ lookup('env', 'SSH_PASS') }}"
     - ansible_become_password: "{{ lookup('env', 'BECOME_PASS') }}"
-    - artifactory_user: "{{ lookup('env', 'ARTIFACTORY_USER') }}"
-    - artifactory_pass: "{{ lookup('env', 'ARTIFACTORY_PASS') }}"
     - vault_broker_token: "{{ lookup('env', 'VAULT_BROKER_TOKEN') }}"
 ```
 NOTES:
@@ -31,23 +29,27 @@ NOTES:
 Example Playbook
 ----------------
 
-This is an example playbook for deploying fluent bit:
+This is an example playbook for deploying the maven builder:
 
 ```
-- name: deploy fluent-bit token and environment
-  hosts: podman_servers
-  gather_facts: false
+- name: deploy maven builder
+  hosts: maven_builder
+  gather_facts: no
+
+  collections:
+    - bcgov.nr
 
   vars:
     ssh_user: "{{ lookup('env', 'SSH_USER') }}"
     ssh_pass: "{{ lookup('env', 'SSH_PASS') }}"
     ansible_become_password: "{{ lookup('env', 'BECOME_PASS') }}"
-    artifactory_user: "{{ lookup('env', 'ARTIFACTORY_USER') }}"
-    artifactory_pass: "{{ lookup('env', 'ARTIFACTORY_PASS') }}"
     vault_broker_token: "{{ lookup('env', 'VAULT_BROKER_TOKEN') }}"
 
+  vars_files:
+    - inventory/dev/group_vars/maven_builder.yml
+
   roles:
-    - role: apm_vault_token
+    - role: maven_builder
 ```
 
 First, logon to Vault (use an account with access to the broker token path):
@@ -57,13 +59,19 @@ export VAULT_ADDR=https://vault-iit.apps.silver.devops.gov.bc.ca
 export VAULT_TOKEN=$(vault login -method=oidc -format json | jq -r '.auth.client_token')
 ```
 
+Install the Ansible collection so the role is available to your playbook:
+
+```
+ansible-galaxy collection install git+https://github.com/bcgov/nr-ansible.git -p ./collections
+```
+
 Do a dry-run:
 
 ```
-andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook deploy-vault-token.yml -i inventory/dev/hosts.yml --check --diff
+envconsul -config "conf/broker-token.hcl" ansible-playbook maven-builder.yml -i inventory/dev/hosts.yml --limit payload --check --diff
 ```
 
 Run the playbook for real:
 ```
-andrwils@NC057944:~/projects/INFRAIO/mid-tier-ansible$ envconsul -config "conf/broker-token.hcl" ansible-playbook deploy-vault-token.yml -i inventory/dev/hosts.yml
+envconsul -config "conf/broker-token.hcl" ansible-playbook maven-builder.yml -i inventory/dev/hosts.yml --limit payload
 ```
