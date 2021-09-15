@@ -1,5 +1,5 @@
 ---
-- name: Check for fluent-bit service
+- name: Check for env conf file
   stat:
     path: '{{ apm_agent_home }}/bin/.env'
   register: vault_env_conf_file
@@ -100,23 +100,6 @@
   when: not ansible_check_mode
   diff: no
 
-- name: Service run script
-  file:
-    src: '{{ apm_agent_home }}/bin/fluentbitw'
-    dest: '{{ apm_agent.service_dir }}/run'
-    mode: '0775'
-    state: link
-    force: yes
-  become: yes
-  become_user: wwwadm
-  
-- name: Register fluent bit
-  shell: '/sw_ux/s6/bin/s6-svscanctl -an /apps_ux/s6_services'
-  become: yes
-  become_user: wwwsvr
-  tags:
-  - molecule-notest
-
 - name: Check previous token variable
   assert:
     that:
@@ -137,7 +120,6 @@
   register: revoke_response
   when: previous_token.stdout | default('') | length > 0
   no_log: True
-  ignore_errors: True
   delegate_to: localhost
   tags:
   - molecule-notest
