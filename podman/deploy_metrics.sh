@@ -2,7 +2,7 @@
 #%
 #% Fluent Bit deployer
 #%
-#%   Requires Podman, vault and privileged host access to /proc/stat.
+#%   Requires Podman, vault, jq and privileged host access to /proc/stat.
 #%
 #% Usage:
 #%   ${THIS_FILE} [command]
@@ -36,9 +36,9 @@ COMMAND="${1:-help}"
 
 # Verify prerequisites
 #
-if( ! ( which podman && which vault))
+if( ! ( which podman && which vault && which jq))
 then
-	echo -e "\nPlease verify podman and vault are installed\n"
+	echo -e "\nPlease verify podman, vault and jq are installed\n"
 	exit
 fi
 
@@ -61,7 +61,7 @@ export HOST_OS_VERSION="$(cat /etc/os-release | grep -e '^VERSION_ID=' |  cut -d
 
 # Host Metadata - General
 #
-export DEFAULT_NET="$(route | grep default | awk '{print $8}')"
+export DEFAULT_NET="$(ip route get 8.8.8.8 | cut -d' ' -f5 | grep -v 'cache')"
 #
 export HOST_ARCH="$(uname -m)"
 export HOST_HOSTNAME="$(hostname -s)"
