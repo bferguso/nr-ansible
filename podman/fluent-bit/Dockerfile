@@ -58,7 +58,7 @@ RUN make -j $(getconf _NPROCESSORS_ONLN)
 RUN install bin/fluent-bit /fluent-bit/bin/
 
 # Configuration files
-COPY podman/fluent-bit/conf/ /fluent-bit/etc/
+COPY ./conf/ /fluent-bit/etc/
 
 FROM gcr.io/distroless/cc-debian10
 LABEL Description="Fluent Bit docker image" Vendor="Fluent Organization" Version="1.1"

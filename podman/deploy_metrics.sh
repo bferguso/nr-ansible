@@ -5,11 +5,17 @@
 #%   Requires Podman, vault, jq and privileged host access to /proc/stat.
 #%
 #% Usage:
-#%   ${THIS_FILE} [command]
+#%   ${THIS_FILE} [TAG]|local
 #%
 #% Commands:
-#%   deploy Deploys Fluent Bit
-#%   help   Displays this help dialog
+#%   [TAG] Deploys an image with the specified tag
+#%   local Builds and delploys a local image
+#%   help  Displays this help dialog
+#%
+#% Examples:
+#%   ${THIS_FILE} latest
+#%   ${THIS_FILE} pr-10
+#%   ${THIS_FILE} local
 #%
 
 
@@ -22,16 +28,16 @@ set -euo pipefail
 # Check parameters - default to showing the help header from this script
 #
 COMMAND="${1:-help}"
-[ "${COMMAND}" = "deploy" ] || {
-	THIS_FILE="$(dirname ${0})/$(basename ${0})"
-
+if [ "${COMMAND}" = "help" ]
+then
 	# Cat this file, grep #% lines and clean up with sed
+	THIS_FILE="$(dirname ${0})/$(basename ${0})"
 	cat ${THIS_FILE} |
 		grep "^#%" |
 		sed -e "s|^#%||g" |
 		sed -e "s|\${THIS_FILE}|${THIS_FILE}|g"
 	exit
-}
+fi
 
 
 # Verify prerequisites
@@ -72,11 +78,17 @@ export HOST_NAME="${HOST_HOSTNAME}"
 export HOST_DOMAIN="$(echo ${HOST_HOSTNAME#[[:alpha:]]*.})"
 
 
-# Build
+# Set image and build, if necessary
 #
-podman build .. -t fb
+if [ "${COMMAND}" == "local" ]
+then
+	podman build $(dirname ${0})/fluent-bit -t fluent-bit
+	IMAGE="localhost/fluent-bit"
+else
+	IMAGE="ghcr.io/bcgov/nr-ansible-fluent-bit:${COMMAND}"
+fi
 
 
 # Run in foreground, passing vars
 #
-podman run --name fluent-bit --rm -e VAULT_* -e HOST_* --pid="host" -v "/proc/stat:/proc/stat:ro" --privileged localhost/fb
+podman run --name fluent-bit --rm -e VAULT_* -e HOST_* --pid="host" -v "/proc/stat:/proc/stat:ro" --privileged "${IMAGE}"

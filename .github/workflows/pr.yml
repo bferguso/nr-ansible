@@ -1,0 +1,73 @@
+name: Pull Request Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}-fluent-bit
+  BUILD_PATH: podman/fluent-bit
+
+jobs:
+  # https://github.community/t/run-job-only-if-folder-changed/118292
+  build-checks:
+    outputs:
+      build: ${{ steps.check.outputs.build }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          # https://github.com/actions/checkout
+          fetch-depth: 2
+
+      - name: Check and process modified files
+        id: check
+        run: |
+          # Check git diff against build path
+          while read -r filename
+          do
+            if [[ $filename == ${{ env.BUILD_PATH }}/* ]]
+            then
+              echo "$filename --> triggering build"
+              echo "::set-output name=build::true"
+              break
+            fi
+          done < <(git diff --name-only)
+
+  build-and-push-image:
+    needs: build-checks
+    if: needs.build-checks.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/docker-login#github-container-registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1.10.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # https://github.com/marketplace/actions/docker-metadata-action
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3.5.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # https://github.com/marketplace/actions/build-and-push-docker-images
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: ${{ env.BUILD_PATH }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
