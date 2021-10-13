@@ -6,16 +6,18 @@
   become: yes
   become_user: wwwadm
   tags:
-  - uninstall
+  - uninstall-safe
+  - uninstall-all
 
 - name: Stop fluent-bit
   include_role:
     name: tomcat_stop
     apply:
-      tags: uninstall
+      tags: [uninstall-safe,uninstall-all]
   when: fluent_bit_run.stat.exists
   tags:
-  - uninstall
+  - uninstall-safe
+  - uninstall-all
 
 - name: Create apache conf directories
   file:
@@ -30,13 +32,25 @@
   become: yes
   become_user: wwwadm
 
-- name: Configuration files
+- name: Filter configuration file
+  template:
+    src: 'templates/{{ item }}'
+    dest: '{{ apm_agent_home }}/conf/apache/{{ item }}'
+    mode: '0664'
+  become: yes
+  become_user: wwwadm
+  loop:
+    - filter/filters.conf
+
+- name: Input configuration file
   copy:
-    src: 'conf'
-    dest: '{{ apm_agent_home }}'
+    src: '{{ item }}'
+    dest: '{{ apm_agent_home }}/conf/apache'
     mode: '0644'
   become: yes
   become_user: wwwadm
+  loop:
+    - conf/apache/input
 
 - name: Remove apache config
   file:
@@ -46,13 +60,13 @@
   become_user: wwwadm
   tags:
   - never
-  - uninstall
+  - uninstall-safe
 
 - name: Start fluent-bit
   include_role:
     name: tomcat_start
     apply:
-      tags: uninstall
+      tags: uninstall-safe
   tags:
   - molecule-notest
-  - uninstall
+  - uninstall-safe

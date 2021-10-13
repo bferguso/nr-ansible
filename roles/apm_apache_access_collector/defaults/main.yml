@@ -2,5 +2,4 @@
 cd_app_service: fluent-bit
 
 apm_collector_base:
-  install_dir: "/apps_ux/fluent-bit"
   service_dir: "/apps_ux/s6_services/fluent-bit"

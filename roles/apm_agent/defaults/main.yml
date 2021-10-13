@@ -6,7 +6,6 @@ apm_agent:
   version: "1.7.4"
   url:
     zip: "http://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/fluent/fluent-bit/1.7.4/fluent-bit.tar.gz"
-  install_dir: "/apps_ux/fluent-bit"
   service_dir: "/apps_ux/s6_services/fluent-bit"
 
 apm_agent_home: "/apps_ux/agents/main"

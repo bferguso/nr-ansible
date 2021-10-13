@@ -90,11 +90,14 @@
   when: not ansible_check_mode
   delegate_to: localhost
 
-- name: .env configuration file
+- name: .env and wrapper files
   template:
-    src: templates/bin/.env
-    dest: '{{ apm_agent_home }}/bin/.env'
+    src: 'templates/bin/{{ item }}'
+    dest: '{{ apm_agent_home }}/bin/{{ item }}'
     mode: '0775'
+  loop:
+    - .env
+    - fluentbitw
   become: yes
   become_user: wwwadm
   when: not ansible_check_mode

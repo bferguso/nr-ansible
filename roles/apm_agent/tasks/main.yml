@@ -22,16 +22,33 @@
   become: yes
   become_user: wwwadm
   tags:
-  - uninstall
+  - uninstall-safe
+  - uninstall-all
 
 - name: Stop fluent-bit
   include_role:
     name: tomcat_stop
     apply:
-      tags: uninstall
+      tags: [uninstall-safe,uninstall-all]
   when: fluent_bit_run.stat.exists
   tags:
-  - uninstall
+  - uninstall-safe
+  - uninstall-all
+
+- name: Remove agent but leave db
+  file:
+    state: absent
+    path: '{{ item }}'
+  loop:
+    - '{{ apm_agent_home }}/bin'
+    - '{{ apm_agent_home }}/conf'
+    - '{{ apm_agent_home }}/lib'
+    - '{{ apm_agent_home }}/logs'
+  become: yes
+  become_user: wwwadm
+  tags:
+  - never
+  - uninstall-safe
 
 - name: Remove agent home
   file:
@@ -41,7 +58,7 @@
   become_user: wwwadm
   tags:
   - never
-  - uninstall
+  - uninstall-all
 
 - name: Create app directories
   file:
@@ -110,14 +127,6 @@
     src: 'conf'
     dest: '{{ apm_agent_home }}'
     mode: '0664'
-  become: yes
-  become_user: wwwadm
-
-- name: Executable files
-  copy:
-    src: 'bin'
-    dest: '{{ apm_agent_home }}'
-    mode: '0775'
   become: yes
   become_user: wwwadm
 
