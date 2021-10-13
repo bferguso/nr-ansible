@@ -1,0 +1,68 @@
+---
+- name: Check app variable
+  assert:
+    that:
+      - app | default('') | length > 0 
+    msg: 'app variable must not be empty'
+
+- name: Check for fluent-bit service
+  stat:
+    path: /apps_ux/s6_services/fluent-bit/run
+  register: fluent_bit_run
+  become: yes
+  become_user: wwwadm
+  tags:
+  - remove-app
+
+- name: Stop fluent-bit
+  include_role:
+    name: tomcat_stop
+    apply:
+      tags: [remove-app]
+  when: fluent_bit_run.stat.exists
+  tags:
+  - remove-app
+
+- name: Create app conf directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}/filter'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}/input'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}/parser'
+  become: yes
+  become_user: wwwadm
+
+- name: Configuration files
+  template:
+    src: 'templates/{{ item }}'
+    dest: '{{ apm_agent_home }}/conf/{{ app | lower }}/{{ item }}'
+    mode: '0664'
+  become: yes
+  become_user: wwwadm
+  loop:
+    - filter/filters.conf
+    - input/inputs.conf
+    - parser/parsers.conf
+
+- name: Remove component config
+  file:
+    state: absent
+    path: '{{ apm_agent_home }}/conf/{{ app | lower }}'
+  become: yes
+  become_user: wwwadm
+  tags:
+  - never
+  - remove-app
+
+- name: Start fluent-bit
+  include_role:
+    name: tomcat_start
+    apply:
+      tags: remove-app
+  tags:
+  - molecule-notest
+  - remove-app

@@ -1,5 +1,5 @@
 ---
-- name: Check for fluent-bit service
+- name: Check for env file
   stat:
     path: '{{ apm_agent_home }}/bin/.env'
   register: vault_env_conf_file
