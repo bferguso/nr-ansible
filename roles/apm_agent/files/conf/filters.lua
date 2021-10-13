@@ -49,7 +49,7 @@ function add_host_metadata(tag, timestamp, record)
     else
         new_record["host.ip"] = nil
     end
-    
+
     if not(isempty(new_record["host.mac"])) then
         new_record["host.mac"] = sdv2array(new_record["host.mac"])
     else
@@ -68,5 +68,16 @@ function add_host_metadata(tag, timestamp, record)
         new_record["host.domain"] = nil
     end
 
+    return 2, timestamp, new_record
+end
+
+function add_system_memory_percentage(tag, timestamp, record)
+    new_record = record
+    if not(isempty(new_record["system.memory.used.bytes"])) and not(isempty(new_record["system.memory.total"])) then
+        new_record["system.memory.used.pct"] = record["system.memory.used.bytes"] / record["system.memory.total"]
+    end
+    if not(isempty(new_record["system.memory.swap.used.bytes"])) and not(isempty(new_record["system.memory.swap.total"])) then
+        new_record["system.memory.swap.used.pct"] = record["system.memory.swap.used.bytes"] / record["system.memory.swap.total"]
+    end
     return 2, timestamp, new_record
 end
