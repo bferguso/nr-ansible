@@ -3,9 +3,9 @@ cd_app_service: fluent-bit
 
 apm_agent:
   name: "Fluent Bit"
-  version: "1.7.4"
+  version: "1.8.8"
   url:
-    zip: "http://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/fluent/fluent-bit/1.7.4/fluent-bit.tar.gz"
+    zip: "http://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/fluent/fluent-bit/1.8.8/fluent-bit.tar.gz"
   service_dir: "/apps_ux/s6_services/fluent-bit"
 
 apm_agent_home: "/apps_ux/agents/main"
