@@ -5,6 +5,12 @@
       - app | default('') | length > 0 
     msg: 'app variable must not be empty'
 
+- name: Check component variable
+  assert:
+    that:
+      - component | default('') | length > 0 
+    msg: 'component variable must not be empty'
+
 - name: Check for fluent-bit service
   stat:
     path: /apps_ux/s6_services/fluent-bit/run
@@ -29,17 +35,17 @@
     state: directory
     mode: '0755'
   loop:
-    - '{{ apm_agent_home }}/conf/{{ app | lower }}'
-    - '{{ apm_agent_home }}/conf/{{ app | lower }}/filter'
-    - '{{ apm_agent_home }}/conf/{{ app | lower }}/input'
-    - '{{ apm_agent_home }}/conf/{{ app | lower }}/parser'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/filter'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/input'
+    - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/parser'
   become: yes
   become_user: wwwadm
 
 - name: Configuration files
   template:
     src: 'templates/{{ item }}'
-    dest: '{{ apm_agent_home }}/conf/{{ app | lower }}/{{ item }}'
+    dest: '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/{{ item }}'
     mode: '0664'
   become: yes
   become_user: wwwadm
@@ -51,7 +57,7 @@
 - name: Remove component config
   file:
     state: absent
-    path: '{{ apm_agent_home }}/conf/{{ app | lower }}'
+    path: '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}'
   become: yes
   become_user: wwwadm
   tags:
