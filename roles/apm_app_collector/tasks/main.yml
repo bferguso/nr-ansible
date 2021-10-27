@@ -47,12 +47,12 @@
     src: 'templates/{{ item }}'
     dest: '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/{{ item }}'
     mode: '0664'
-  become: yes
-  become_user: wwwadm
   loop:
     - filter/filters.conf
     - input/inputs.conf
     - parser/parsers.conf
+  become: yes
+  become_user: wwwadm
 
 - name: Remove component config
   file:
