@@ -105,7 +105,6 @@ EXPOSE 2020
 # Fluent Bit
 ENV FLUENT_HOME /fluent-bit
 ENV FLUENT_VERSION 1.8.8
-ENV FLUENT_HOME "."
 
 # Entry point
 CMD [ \
