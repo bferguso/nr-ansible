@@ -69,6 +69,7 @@
     name: tomcat_start
     apply:
       tags: remove-app
+  when: fluent_bit_run.stat.exists
   tags:
   - molecule-notest
   - remove-app
