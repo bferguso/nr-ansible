@@ -1,0 +1,64 @@
+# qed_app_dir: "{{ common_apps_home }}/qed_sandbox"
+# qed_data_dir: "{{ common_apps_data }}/qed_sandbox"
+# qed_tomcat_http_port: "8180"
+# qed_tomcat_https_port: "8444"
+# qed_tomcat_shutdown_port: "-1"
+# qed_tomcat_ajp_port: "8010"
+# qed_tomcat_jmx_port: "1841"
+# qed_tomcat_partner_host: "qed-tomcat"
+# qed_tomcat_partner_port: ""
+# qed_crontab_min: "15"
+artifactory_username: bferguso
+artifactory_password:
+
+s6_enabled:                       no
+s6_home:                          '/sw_ux/s6'
+s6_services:                      '/apps_ux/s6_services'
+
+logstash_enabled:                 no
+logstash_conf_dir:                '/apps_ux/data/logstash/conf'
+
+cd_apps_home: /apps_ux
+cd_apps_data: /apps_data
+cd_apps_logs: '{{ cd_apps_data }}/logs'
+
+log_level_cfsweb: DEBUG
+
+portmanager_debug: false
+
+
+# # Security plugin properties file
+# oauth2_token_url: "https://i1auth.nrs.gov.bc.ca/pub/webade-oauth2/oauth/token?disableDeveloperFilter=false"
+# cwms_rest_url: "https://i1api.nrs.gov.bc.ca/cwm-cwms-api/v1/"
+#
+# # JNDI datasources
+# jndi_resources:
+#   - name: "geotools/ilrrpub"
+#     type: "org.geotools.arcsde.session.ISessionPool"
+#     props:
+#       - { factory: org.geotools.arcsde.jndi.ArcSDEConnectionFactory }
+#       - { server: totem.bcgov }
+#       - { user: PROXY_ILRR_GS_PUB }
+#       - { password: "{{ proxy_ilrr_gs_pub_password }}" }
+#       - { instance: ilrdlv }
+#       - { port: 5165 }
+#       - { initialSize: 2 }
+#       - { maxActive: 16 }
+#       - { maxWait: 500 }
+#       - { minEvictableIdleTimeMillis: 2700000 }
+#       - { timeBetweenEvictionRunsMillis: 300000 }
+#   - name: "geotools/ilrrsec"
+#     type: "org.geotools.arcsde.session.ISessionPool"
+#     props:
+#       - { factory: org.geotools.arcsde.jndi.ArcSDEConnectionFactory }
+#       - { server: totem.bcgov }
+#       - { user: PROXY_ILRR_GS_SEC }
+#       - { password: "{{ proxy_ilrr_gs_sec_password }}" }
+#       - { instance: ilrdlv }
+#       - { port: 5165 }
+#       - { initialSize: 2 }
+#       - { maxActive: 16 }
+#       - { maxWait: 500 }
+#       - { minEvictableIdleTimeMillis: 2700000 }
+#       - { timeBetweenEvictionRunsMillis: 300000 }
+#
