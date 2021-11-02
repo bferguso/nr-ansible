@@ -1,0 +1,23 @@
+---
+- name: "Setup core IITD migration framework"
+  import_tasks: "setup_core.yml"
+
+- name: "Perform application migration for version {{ cd_version }}"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase migrate -Dapp_version={{cd_version}}"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+
+- name: "Tag database for version {{ cd_version }}"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase tag {{cd_version}}"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+
+- name: "Recompile schema"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=compile_schema migrate"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+
+- name: "Tag and create baseline"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=generate_baseline migrate -Dstage=post{{ cd_version }}"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"

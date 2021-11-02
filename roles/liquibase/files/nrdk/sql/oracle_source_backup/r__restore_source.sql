@@ -1,0 +1,1 @@
+call restore_source('${source_type}', '${source_name}', '${version_tag}')

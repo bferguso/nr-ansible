@@ -1,0 +1,5 @@
+---
+- name: "Rollback to version pre{{cd_version}}"
+  shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase rollback pre{{cd_version}} -Dapp_version={{cd_version}}"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"

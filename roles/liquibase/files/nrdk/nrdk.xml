@@ -1,0 +1,98 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet  author="qed"  id="baseline_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup">
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  endDelimiter="\n@"
+                  path="sql/schema_validation/v01__create_validation_table.sql"
+                  relativeToChangelogFile="true"
+                  splitStatements="true"
+                  stripComments="true"/>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  splitStatements="true"
+                  endDelimiter="/"
+                  path="sql/oracle_source_backup/v01__setup_source_backup.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="generate_baseline" runAlways="true" runOnChange="true" failOnError="false" context="generate_baseline">
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  path="sql/schema_validation/v03__generate_baseline.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="tag" runAlways="true" runOnChange="true" failOnError="false" context="tag">
+        <tagDatabase tag="${migration_tag}"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="pre${migration_tag}_tag" runAlways="true" runOnChange="true" failOnError="false" context="pre_tag">
+        <tagDatabase tag="pre${migration_tag}"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="verify_and_tag" runAlways="true" runOnChange="true" failOnError="false" context="verify_and_tag">
+        <preConditions>
+            <sqlCheck expectedResult="${pre_delta}">select count(*) from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${post_stage}'
+                )</sqlCheck>
+            <sqlCheck expectedResult="${post_delta}">select count(*) from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${post_stage}' minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}'
+                )</sqlCheck>
+        </preConditions>
+        <comment>Results expected</comment>
+    </changeSet>
+
+    <changeSet  author="qed"  id="verify_rollback" runAlways="true" runOnChange="true" failOnError="false" context="verify_rollback">
+        <preConditions>
+            <sqlCheck expectedResult="0">select count(*) from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${post_stage}'
+                )</sqlCheck>
+            <sqlCheck expectedResult="0">select count(*) from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${post_stage}' minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}'
+                )</sqlCheck>
+        </preConditions>
+        <comment>Results expected</comment>
+    </changeSet>
+
+    <changeSet  author="qed"  id="baseline_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  endDelimiter="\n@"
+                  path="sql/schema_validation/v04__drop_validation_table.sql"
+                  relativeToChangelogFile="true"
+                  splitStatements="true"
+                  stripComments="true"/>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  splitStatements="true"
+                  endDelimiter=";"
+                  path="sql/oracle_source_backup/v02__drop_source_backup.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+    </changeSet>
+    <changeSet  author="qed"  id="compile_invalid_objects" runAlways="true" runOnChange="true" context="compile_schema">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="SHOULD_RUN">select decode(count(*), 0, 'DONT_RUN','SHOULD_RUN') from user_objects where status = 'INVALID'</sqlCheck>
+        </preConditions>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  endDelimiter="\n@"
+                  path="sql/schema_validation/r__compile_invalid_objects.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+        <rollback/>
+    </changeSet>
+</databaseChangeLog>
