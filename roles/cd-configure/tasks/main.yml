@@ -1,0 +1,16 @@
+---
+- name: "Ensure the target environment has been specified"
+  assert:
+     that:
+        - cdconf_target is defined
+        - cd_version is defined
+
+- name: Get variables from configuration file
+  include_vars: "{{ item }}"
+  with_items:
+     - "{{ cdconf_variables_dir }}/DEFAULT.yml"
+     - "{{ cdconf_variables_dir }}/{{ cdconf_target }}.yml"
+
+- name: Print all available facts
+  ansible.builtin.debug:
+    var: cdconf_target

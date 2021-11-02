@@ -1,0 +1,1 @@
+cdconf_variables_dir: "{{playbook_dir}}/vars"

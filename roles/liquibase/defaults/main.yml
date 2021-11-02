@@ -5,27 +5,9 @@
 ######################
 # Required properties
 ######################
-# Because this role advertises a tight integration with Jenkins (essentially a dependency),
-# it uses the provided variables directly instead of proxying them
-# cd_component
-# cd_version
-
-# This variable is required to locate the artifact group. Could not see where this
-# is defined in Jenkins, but if it is available there, this is unnecessary
 
 # Required
-#cd_bootstrap_assembly:
 lb_deploy_scripts_user: "{{ deploy_scripts_user | default('wwwadm') }}"
-
-
-# TODO - Should publish artifact containing database scripts
-#lb_db_stash_base_url: "{{db_stash_url | default('https://bwa.nrs.gov.bc.ca/int/stash/scm')}}"
-#lb_db_stash_project: "{{ db_stash_project }}"
-#lb_db_stash_repo: "{{ db_stash_repo }}"
-#lb_db_stash_branch: "{{ db_stash_branch }}"
-#lb_db_stash_scripts_url: "{{lb_db_stash_base_url}}/{{lb_db_stash_project}}/{{lb_db_stash_repo}}.git"
-#lb_db_scripts_arifactory_url: "{{cd_bootstrap_artifactory_url}}"
-
 lb_migrations_artifact: "{{ migrations_jar.artifact }}"
 
 lb_liquibase_staging_dir:  "{{ cd_app_home }}/liquibase"
@@ -42,7 +24,7 @@ lb_changelog_file: "{{ changelog_file | default('changelog.xml') }}"
 lb_db_url: "{{ db_url }}"
 lb_db_username: "{{ db_username }}"
 lb_db_password: "{{ db_password }}"
-lb_actions: "{{ split(db_actions | default('migrate')) }}"
+lb_actions: "{{ (db_actions | default('migrate')).split(',') }}"
 
 lb_migrations_artifact:
   group_id: "{{ artifact_group_id }}"
@@ -50,7 +32,7 @@ lb_migrations_artifact:
   type: "{{ artifact_type }}"
   classifier: "{{ artifact_classifier }}"
   version: "{{ cd_version }}"
-  name: "{{ artifact_id+'-'+artifact_version+'-'+artifact_classifier+'.'+artifact_type }}"
+  name: "{{ artifact_id+'-'+cd_version+'-'+artifact_classifier+'.'+artifact_type }}"
 
 
 lb_overwrite_baseline: "{{ overwrite_baseline | default(False) }}"

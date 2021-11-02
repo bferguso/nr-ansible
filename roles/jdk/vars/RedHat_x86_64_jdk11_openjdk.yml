@@ -1,0 +1,9 @@
+# roles/jdk/vars/RedHat_x86_64_jdk11_openjdk.yml
+
+jdk_cacerts_file: "{{ jdk_home }}/lib/security/cacerts"
+
+jdk_archive:
+  version: "11.0.4"
+  filename: "java-11-openjdk-11.0.4.11-5.static.jdk.openjdkportable.x86_64.tar.xz"
+  url: "{{ artifactory_url }}/ext-binaries-local/openjdk/java-11-openjdk-11.0.4.11-5.static.jdk.openjdkportable.x86_64.tar.xz"
+  checksum: "sha1:11e74db7c7ea7592122b533baa803a6cbfd39ab4"

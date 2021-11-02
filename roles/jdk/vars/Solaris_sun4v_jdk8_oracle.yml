@@ -1,0 +1,13 @@
+# roles/jdk/vars/Solaris_sun4v_jdk8.yml
+
+#jdk_archive:
+#  version: "1.8.0_144"
+#  filename: "jdk-8u144-solaris-sparcv9.tar.gz"
+#  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk8/jdk-8u144-solaris-sparcv9.tar.gz"
+#  checksum : "sha1:d7cf5ee011809e1d1308a953a9d780f187e72c60"
+
+jdk_archive:
+  version: "1.8.0_192"
+  filename: "jdk-8u192-solaris-sparcv9.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk8/jdk-8u192-solaris-sparcv9.tar.gz"
+  checksum : "sha1:6299ca81c9b124f1cb91bad04c0514dbd4d7e30a"

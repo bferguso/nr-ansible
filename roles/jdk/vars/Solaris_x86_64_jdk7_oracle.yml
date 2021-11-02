@@ -1,0 +1,15 @@
+# roles/jdk/vars/Solaris_sun4v_jdk7.yml
+
+jdk_archive:
+  version: "1.7.0_79"
+  filename: "jdk-7u79-solaris-i586.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk7/jdk-7u79-solaris-i586.tar.gz"
+  checksum : "sha1:4c483ef887f01671d4289cc9b01ba1a1dfffb10a"
+  
+#64 bit jdk for solaris x86  
+jdk_64bit:
+  version: "1.7.0_79"
+  filename: "jdk-7u79-solaris-x64.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk7/jdk-7u79-solaris-x64.tar.gz"
+  checksum : "sha1:e989b4045961738ad324f5c8faa1363e3a34d61a"
+ 

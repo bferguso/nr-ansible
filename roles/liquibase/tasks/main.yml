@@ -45,14 +45,18 @@
 
 - name: "Remove previous version of artifact if it exists"
   file:
-    path: "{{ cd_app_home }}/{{ lb_artifact_name }}"
+    path: "{{ cd_app_home }}/{{ lb_migrations_artifact.name }}"
     state: absent
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
 
-- name: "download artifact from repository: {{ lb_artifact_name }}"
+- debug:
+    var: ansible_hostname
+
+- name: "download artifact from repository: {{ lb_migrations_artifact.name }}"
   maven_artifact:
-    repository_url: "{{ cd_bootstrap_artifactory_url }}/{{ lb_migrations_artifact.repo }}"
+#    repository_url: "{{ cd_bootstrap_artifactory_url }}/{{ lb_migrations_artifact.repo }}"
+    repository_url: "{{ cd_bootstrap_artifactory_url }}"
     group_id: "{{ lb_migrations_artifact.group_id }}"
     artifact_id: "{{ lb_migrations_artifact.artifact_id }}"
     version: "{{ lb_migrations_artifact.version }}"
@@ -84,26 +88,6 @@
      mode: 0600
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
-
-# - name: "Setup core IITD migration framework, compile schema and generate baseline"
-#   shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=setup,compile_schema,generate_baseline migrate -Dstage=pre{{cd_version}}"
-#   become: yes
-#   become_user: "{{ lb_deploy_scripts_user }}"
-#
-# - name: "Perform application migration for version {{ cd_version }}"
-#   shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase migrate"
-#   become: yes
-#   become_user: "{{ lb_deploy_scripts_user }}"
-#
-# - name: "Recompile schema"
-#   shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=compile_schema migrate"
-#   become: yes
-#   become_user: "{{ lb_deploy_scripts_user }}"
-#
-# - name: "Tag and create baseline"
-#   shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=tag,generate_baseline migrate -Dmigration_tag={{ cd_version }} -Dstage=post{{ cd_version }}"
-#   become: yes
-#   become_user: "{{ lb_deploy_scripts_user }}"
 
 - name: "Perform {{ lb_actions }}"
   include_tasks: "{{ item }}.yml"
