@@ -13,7 +13,8 @@
      url_password: "{{ password }}"
 
 - name: Get variables from configuration file
-  include_vars: "./playbook_vars.yml"
+  include_vars: "{{ lookup('env','PWD') }}/playbook_vars.yml"
+
 - name: "Set variables for liquibase deployment"
   set_fact:
      cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}/"
