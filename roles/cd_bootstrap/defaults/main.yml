@@ -1,0 +1,23 @@
+---
+# defaults file for liquibase
+# namespace is cd_playbook_*
+
+######################
+# Required properties
+######################
+# artifact_group_id
+# artifact_id
+# artifact_classifier
+# artifact_version
+
+cd_bootstrap_artifactory_url: "{{ artifactory_url | default('https://bwa.nrs.gov.bc.ca/int/artifactory/libs-release') }}"
+cd_bootstrap_classifier: "{{ artifact_classifier | default('playbook') }}"
+cd_playbook_base_dir: "{{ playbook_base_dir | default('cd/playbook') }}"
+cd_app_home: "{{ app_home | default('.') }}"
+cd_playbook_artifact:
+  group_id: "{{ artifact_group_id }}"
+  artifact_id: "{{ artifact_id }}"
+  type: "{{ artifact_type | default('zip') }}"
+  classifier: "{{ cd_bootstrap_classifier }}"
+  version: "{{ artifact_version }}"
+  name: "{{ artifact_id+'-'+artifact_version+'-'+ cd_bootstrap_classifier +'.'+artifact_type }}"
