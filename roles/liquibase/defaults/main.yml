@@ -8,7 +8,7 @@
 
 # Required
 lb_deploy_scripts_user: "{{ deploy_scripts_user | default('wwwadm') }}"
-lb_migrations_artifact: "{{ migrations_jar.artifact }}"
+lb_app_artifactory_url: "{{ app_artifactory_url | default('https://bwa.nrs.gov.bc.ca/pub/artifactory') }}"
 
 lb_liquibase_staging_dir:  "{{ cd_app_home }}/liquibase"
 lb_liquibase_library_dir:  "{{ lb_liquibase_staging_dir }}/lib"

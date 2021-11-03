@@ -55,8 +55,7 @@
 
 - name: "download artifact from repository: {{ lb_migrations_artifact.name }}"
   maven_artifact:
-#    repository_url: "{{ cd_bootstrap_artifactory_url }}/{{ lb_migrations_artifact.repo }}"
-    repository_url: "{{ cd_bootstrap_artifactory_url }}"
+    repository_url: "{{ lb_app_artifactory_url }}"
     group_id: "{{ lb_migrations_artifact.group_id }}"
     artifact_id: "{{ lb_migrations_artifact.artifact_id }}"
     version: "{{ lb_migrations_artifact.version }}"
