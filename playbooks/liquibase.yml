@@ -3,6 +3,14 @@
   hosts: deployment-servers
   collections:
     - bcgov.nr
+  vars:
+     # Required variables
+     # User:
+     # artifactory_username
+     # artifactory_password
+     # playbook_vars_url
+     # cdconf_target
+     # cd_version
 
   roles:
     - name: cd-configure

@@ -17,7 +17,7 @@
 
 - name: "Set variables for liquibase deployment"
   set_fact:
-     cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}/"
+     cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}"
 
 - name: Print all available variables
   debug:
