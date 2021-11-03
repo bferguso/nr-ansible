@@ -1,0 +1,24 @@
+---
+- name: liquibase migration
+  hosts: deployment-servers
+  collections:
+    - bcgov.nr
+  vars:
+
+  tasks:
+    - import_role:
+       name: cd-configure
+
+    # install a JDK specific to this application
+    - import_role:
+        name: jdk
+        vars:
+          jdk_version: '8'
+          cd_app_install: '{{ cd_app_home }}' # cd_app_home provided by cd-configure
+          jdk_install_as: 'runner'
+
+    - import_role:
+      name: liquibase
+      vars:
+         artifact_version: "{{ cd_version }}"
+         db_jdbc_driver_artiractory_url: "https://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/com.oracle/ojdbc8-19.3.0.0.jar"

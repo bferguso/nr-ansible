@@ -5,12 +5,19 @@
         - cdconf_target is defined
         - cd_version is defined
 
-- name: Get variables from configuration file
-  include_vars: "{{ item }}"
-  with_items:
-     - "{{ cdconf_variables_dir }}/DEFAULT.yml"
-     - "{{ cdconf_variables_dir }}/{{ cdconf_target }}.yml"
+- name: Get playbook variables file
+  get_url:
+     url: "{{ playbook_vars_url }}"
+     dest: "{{ lookup('env','PWD') }}/playbook_vars.yml"
+     url_username: "{{ username }}"
+     url_password: "{{ password }}"
 
-- name: Print all available facts
-  ansible.builtin.debug:
-    var: cdconf_target
+- name: Get variables from configuration file
+  include_vars: "./playbook_vars.yml"
+- name: "Set variables for liquibase deployment"
+  set_fact:
+     cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}/"
+
+- name: Print all available variables
+  debug:
+    var: vars
