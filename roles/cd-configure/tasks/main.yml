@@ -15,6 +15,12 @@
 - name: Get variables from configuration file
   include_vars: "{{ lookup('env','PWD') }}/playbook_vars.yml"
 
+- name: "Flatten target variables for {{ cdconf_target }}"
+  set_fact:
+     "{{ item.key }}": "{{ item.value }}"
+  with_dict:
+     - "{{ lookup('vars', cdconf_target) }}"
+
 - name: "Set variables for liquibase deployment"
   set_fact:
      cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}"
