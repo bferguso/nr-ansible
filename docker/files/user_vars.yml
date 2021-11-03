@@ -1,0 +1,4 @@
+username: <idir username>
+password: <idir password>
+artifactory_username: "{{ username }}"
+artifactory_password: "{{ password }}"
