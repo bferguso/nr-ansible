@@ -21,6 +21,6 @@ COPY --from=builder /usr/local/bin/tinyproxy /usr/local/bin
 COPY ./conf/ /usr/local/etc/tinyproxy/
 
 # Startup, non-privileged user
-EXPOSE 8888/tcp
+EXPOSE 23128/tcp
 USER 1001
 CMD ["tinyproxy", "-d"]

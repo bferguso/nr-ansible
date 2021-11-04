@@ -18,10 +18,10 @@ podman build . -t tinyproxy
 
 ### Run
 
-Run a container.  Change the default port with `-p`.
+Run a container.  The `--network=host` is required, otherwise the IP of the incoming request gets changed which renders tinyproxy's IP/subnet filtration useless.
 
 ```
-podman run --name=tinyproxy -p 23128:8888 tinyproxy
+podman run --name=tinyproxy --network=host tinyproxy
 ```
 
 ### Run Custom Config
@@ -29,7 +29,7 @@ podman run --name=tinyproxy -p 23128:8888 tinyproxy
 Run with custom config mounted in a volume at startup.  This is expected use.
 
 ```
-podman run --name=tinyproxy -p 23128:8888 -v $(pwd)/conf/:/usr/local/etc/tinyproxy/:z tinyproxy
+podman run --name=tinyproxy -v $(pwd)/conf/:/usr/local/etc/tinyproxy/:z --network=host tinyproxy
 ```
 
 Note: SELinux distros (e.g. Red Hat, CentOS, Fedora) require `:z` for all volumes.
@@ -46,9 +46,12 @@ podman restart tinyproxy
 
 ### Logs
 
-View the logs for a running container.  Follow (/tail) with `-f`.
+View the logs for a running container.  Follow/tail with `-f`, or the last N lines with `-tail N`.  Search logs using grep...
 
 ```
 podman logs tinyproxy
 podman logs -f tinyproxy
+podman logs tinyproxy --tail N
+podman logs tinyproxy | grep pattern
+podman logs tinyproxy | grep -i error
 ```
