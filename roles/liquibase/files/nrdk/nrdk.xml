@@ -39,7 +39,7 @@
         <tagDatabase tag="pre${migration_tag}"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="verify_and_tag" runAlways="true" runOnChange="true" failOnError="false" context="verify_and_tag">
+    <changeSet  author="qed"  id="verify" runAlways="true" runOnChange="true" failOnError="false" context="verify">
         <preConditions>
             <sqlCheck expectedResult="${pre_delta}">select count(*) from (
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
