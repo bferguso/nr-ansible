@@ -50,9 +50,6 @@
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
 
-- debug:
-    var: ansible_hostname
-
 - name: "download artifact from repository: {{ lb_migrations_artifact.name }}"
   maven_artifact:
     repository_url: "{{ lb_app_artifactory_url }}"
