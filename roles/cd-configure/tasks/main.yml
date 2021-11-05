@@ -24,7 +24,7 @@
 # Tried to do this with the hashi_vault plugin, but without success
 - name: Get secrets from vault
   set_fact:
-    vault_secrets: "{{ lookup('url', 'https://vault-iit.apps.silver.devops.gov.bc.ca/v1/apps/data/'+cdconf_target+'/'+(project | lower)+'/'+(artifact_id | lower), headers={'X-Vault-Token':vault_token} ) }}"
+    vault_secrets: "{{ lookup('url', vault_url+'/'+vault_context, headers={'X-Vault-Token':vault_token} ) }}"
 
 - name: "Flatten target variables for vault_secrets"
   set_fact:

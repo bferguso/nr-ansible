@@ -6,15 +6,15 @@
   vars:
   vars_prompt:
     - name: "username"
-      prompt: "your (eg <username>@gov.bc.ca)"
+      prompt: "IDIR username (eg <username>@gov.bc.ca) including @gov.bc.ca"
       private: no
 
-    - name: "password"
+    - name: "IDIR password"
       prompt: "password"
       private: yes
 
     - name: "vault_token"
-      prompt: "Vault token. Can be obtained by logging in to https://vault-iit.apps.silver.devops.gov.bc.ca/ui/vault/auth?with=oidc"
+      prompt: "Vault token. (Can be obtained by logging in to https://vault-iit.apps.silver.devops.gov.bc.ca/ui/vault/auth?with=oidc)"
       private: no
      # Required variables
      # User:
