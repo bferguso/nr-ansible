@@ -5,6 +5,14 @@
         - cdconf_target is defined
         - cd_version is defined
 
+- name: Get secrets from vault
+  set_fact:
+     vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', vault_context, token=vault_token, url=vault_url) }}"
+
+- name: "!!Remove!! Show secrets for framework debug"
+  debug:
+     var: vault_secrets
+
 - name: Get playbook variables file
   get_url:
      url: "{{ playbook_vars_url }}"
@@ -20,6 +28,7 @@
      "{{ item.key }}": "{{ item.value }}"
   with_dict:
      - "{{ lookup('vars', cdconf_target) }}"
+     - vault_secrets
 
 - name: "Set variables for liquibase deployment"
   set_fact:
