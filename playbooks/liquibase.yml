@@ -9,8 +9,8 @@
       prompt: "IDIR username (eg <username>@gov.bc.ca) including @gov.bc.ca"
       private: no
 
-    - name: "IDIR password"
-      prompt: "password"
+    - name: "password"
+      prompt: "IDIR password"
       private: yes
 
     - name: "vault_token"
