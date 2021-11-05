@@ -26,4 +26,3 @@ ENV PATH $PATH:/home/runner/.local/bin
 RUN python -m pip install --upgrade pip && \
   python -m pip install ansible && \
   python -m pip install lxml
-
