@@ -10,4 +10,4 @@ Steps:
 4. Check the settings in the run_playbook.sh
    1. (docker)# vi run_playbook.sh
 5. Run the liquibase playbook:
-   1. (docker)# ./run_playbook.yml
+   1. (docker)# ./run_playbook.sh
