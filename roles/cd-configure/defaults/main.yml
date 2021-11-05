@@ -1,6 +1,6 @@
 cdconf_variables_dir: "{{playbook_dir}}/vars"
 artifactory_username: "{{ username }}"
-artifactory_password: "{{ username }}"
+artifactory_password: "{{ password }}"
 
-vault_url: https://vault-iit.apps.silver.devops.gov.bc.ca
-vault_context: "v1/apps/data/{{ target | lower }}/{{ project | lower }}/{{ artifact_id | lower }}"
+vault_url: https://vault-iit.apps.silver.devops.gov.bc.ca/v1/apps/data
+vault_context: "{{ cdconf_target | lower }}/{{ project | lower }}/{{ artifact_id | lower }}/"
