@@ -1,0 +1,21 @@
+---
+- name: "Run migration"
+  include_tasks: migrate.yml
+
+- name: "Rollback"
+  include_tasks: rollback.yml
+
+- name: "Tag and create baseline after rollback"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=generate_baseline migrate -Dstage=post_rollback{{ cd_version }}"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+
+- name: "Verify Rollback"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=verify migrate -Dpre_stage=post{{ cd_version }} -Dpre_delta=0 -Dpost_stage=post_rollback{{ cd_version }} -Dpost_delta=0"
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+  register: verify_output
+
+- name: "Show Verify Rollback stdout"
+  debug:
+    var: verify_output
