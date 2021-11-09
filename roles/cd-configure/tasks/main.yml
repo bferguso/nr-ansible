@@ -21,23 +21,9 @@
   with_dict:
      - "{{ lookup('vars', cdconf_target) }}"
 
-# Tried to do this with the hashi_vault plugin, but without success
-- name: Get secrets from vault
-  set_fact:
-    vault_secrets: "{{ lookup('url', vault_url+'/'+vault_context, headers={'X-Vault-Token':vault_token} ) }}"
-- name: "Create list of secret keys"
-  set_fact:
-     secret_keys: "{{ vault_secrets['data']['data'].keys() | list }}"
-
-- name: "Available Vault secret keys"
-  debug: var=secret_keys
-
-- name: "Flatten target variables for vault_secrets"
-  set_fact:
-     "{{ item.key }}": "{{ item.value }}"
-  with_dict:
-     - "{{ vault_secrets['data']['data'] }}"
-  no_log: True
+- name: "Get secrets from HashiCorp Vault"
+  include_tasks: hashi_vault.yml
+  when: (vault_token | length ) > 0
 
 - name: "Set variables for liquibase deployment"
   set_fact:

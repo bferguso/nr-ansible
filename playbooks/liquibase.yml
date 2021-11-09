@@ -14,7 +14,7 @@
       private: yes
 
     - name: "vault_token"
-      prompt: "Vault token. (Can be obtained by logging in to https://vault-iit.apps.silver.devops.gov.bc.ca/ui/vault/auth?with=oidc)"
+      prompt: "Vault token. (Can be obtained by logging in to https://vault-iit.apps.silver.devops.gov.bc.ca/ui/vault/auth?with=oidc. Leave blank if not using NRMs Vault.)"
       private: no
 
     - name: "db_actions"
