@@ -12,7 +12,7 @@ lb_app_artifactory_url: "{{ app_artifactory_url | default('https://bwa.nrs.gov.b
 
 lb_liquibase_staging_dir:  "{{ cd_app_home }}/liquibase"
 lb_liquibase_library_dir:  "{{ lb_liquibase_staging_dir }}/lib"
-lb_liquibase_version: "{{ liquibase_version | default('4.4.3') }}"
+lb_liquibase_version: "{{ liquibase_version | default('4.5.0') }}"
 lb_liquibase_download_url: "https://github.com/liquibase/liquibase/releases/download/v{{lb_liquibase_version}}/liquibase-{{lb_liquibase_version}}.tar.gz"
 
 cd_migrations_base_dir: "{{ migrations_base_dir | default('cd/migrations') }}"
