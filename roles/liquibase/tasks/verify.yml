@@ -3,3 +3,8 @@
   shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=verify migrate -Dpre_stage=pre{{ cd_version }} -Dpre_delta={{ pre_delta }} -Dpost_stage=post{{ cd_version }} -Dpost_delta={{ post_delta }}"
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
+  register: verify_output
+
+- name: "Show verify stdout"
+  debug:
+    var: verify_output
