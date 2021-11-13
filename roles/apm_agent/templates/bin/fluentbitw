@@ -1,6 +1,4 @@
 #!/bin/sh
-# When no argument is provided, it is assumed that it is running as a service, and default arguments are provided
-# When arguments are provided, they are forwarded to fluentbit as is
 
 # https://stackoverflow.com/a/246128
 SOURCE="${BASH_SOURCE[0]}"
@@ -32,12 +30,5 @@ export HOST_MAC=$(ip link | grep 'link/ether' | tr -s " " | cut -d' ' -f3)
 
 source "${SCRIPT_DIR}/.env"
 
-argsv=( "$@" )
-
-# default arguments
-if [ $# -eq 0 ]; then
-  argsv+=( '-c' "${FLUENT_HOME}/conf/fluent-bit.conf" )
-fi
-
 # run fluent bit
-exec /sw_ux/bin/envconsul "-config=${FLUENT_HOME}/conf/fluent-bit.hcl" "${FLUENT_HOME}/bin/fluent-bit" "${argsv[@]}"
+exec /sw_ux/bin/envconsul "-config=${FLUENT_HOME}/conf/fluent-bit.hcl"
