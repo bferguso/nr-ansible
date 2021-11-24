@@ -1,7 +1,9 @@
 export ANSIBLE_COLLECTIONS_PATH=./collections
+echo Using source: $APP_SOURCE
 ansible-playbook \
 	-i collections/ansible_collections/bcgov/nr/inventory/qed \
-	--extra-vars playbook_vars_url=https://bwa.nrs.gov.bc.ca/int/stash/projects/FFS/repos/ffs-db/raw/src/cd/playbooks/vars/playbook_vars.yml?at=refs%2Fheads%2Ffeature%2F7.4.2_new \
-	--extra-vars cdconf_target=dev \
-	--extra-vars cd_version="7.4.2-SNAPSHOT" \
+	--extra-vars playbook_vars_url=$APP_SOURCE \
+	--extra-vars cdconf_target=$CONFIG_TARGET \
+	--extra-vars cd_version=$APP_VERSION \
+	$EXTRA_VARS \
 	collections/ansible_collections/bcgov/nr/playbooks/liquibase.yml
