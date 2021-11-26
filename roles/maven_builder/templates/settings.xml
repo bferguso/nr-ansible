@@ -1,0 +1,89 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+<servers>
+        <server>
+            <username>${env.CI_USER}</username>
+            <password>${env.CI_PASS}</password>
+            <id>artifactory-libs-release</id>
+        </server>
+        <server>
+            <username>${env.CI_USER}</username>
+            <password>${env.CI_PASS}</password>
+            <id>artifactory-libs-snapshot</id>
+        </server>
+        <server>
+            <username>${env.CI_USER}</username>
+            <password>${env.CI_PASS}</password>
+            <id>artifactory-plugins-release</id>
+        </server>
+        <server>
+            <username>${env.CI_USER}</username>
+            <password>${env.CI_PASS}</password>
+            <id>artifactory-plugins-snapshot</id>
+        </server>
+		<server>
+            <username>${env.CI_USER}</username>
+            <password>${env.CI_PASS}</password>
+            <id>artifactory-ext-release-local</id>
+        </server>
+    </servers>
+
+  <proxies>
+    <proxy>
+      <id>{{ forward_proxy_id }}</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>{{ forward_proxy_host }}</host>
+      <port>{{ forward_proxy_port }}</port>
+      <nonProxyHosts>{{ non_proxy_hosts }}</nonProxyHosts>
+    </proxy>
+  </proxies>
+
+<profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>artifactory-libs-release</id>
+                    <name>libs-release</name>
+                    <url>{{ artifactory_base_url }}/libs-release</url>
+                </repository>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>artifactory-libs-snapshot</id>
+                    <name>libs-snapshot</name>
+                    <url>{{ artifactory_base_url }}/libs-snapshot</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>artifactory-plugins-release</id>
+                    <name>plugins-release</name>
+                    <url>{{ artifactory_base_url }}/plugins-release</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>artifactory-ext-release-local</id>
+                    <name>ext-release-local/</name>
+                    <url>{{ artifactory_base_url }}/ext-release-local</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <id>artifactory</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+    </activeProfiles>
+
+</settings>

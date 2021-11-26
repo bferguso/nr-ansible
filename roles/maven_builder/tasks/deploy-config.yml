@@ -1,0 +1,88 @@
+---
+- name: Get wrapped token
+  uri:
+    url: '{{ vault_addr }}/v1/auth/vs_apps_approle/role/{{ vault_approle }}/secret-id'
+    method: POST
+    headers:
+      X-Vault-Token: '{{ vault_broker_token }}'
+      X-Vault-Wrap-Ttl: 120s
+    body_format: json
+    return_content: yes
+    status_code: 200
+  register: wrapped_response
+  when: not ansible_check_mode
+  # no_log: True
+  delegate_to: localhost
+  tags:
+  - molecule-notest
+
+- name: Get secret-id
+  uri:
+    url: '{{ vault_addr }}/v1/sys/wrapping/unwrap'
+    method: POST
+    headers:
+      X-Vault-Token: '{{ wrapped_response.json.wrap_info.token }}'
+    body_format: json
+    return_content: yes
+    status_code: 200
+  register: secret_id
+  when: not ansible_check_mode
+  no_log: True
+  delegate_to: localhost
+  tags:
+  - molecule-notest
+
+- name: Get token
+  uri:
+    url: '{{ vault_addr }}/v1/auth/vs_apps_approle/login'
+    method: POST
+    body_format: json
+    body: '{ "role_id": "{{ role_id }}", "secret_id": "{{ secret_id.json.data.secret_id }}" }'
+    return_content: yes
+    status_code: 200
+  register: approle_token
+  when: not ansible_check_mode
+  no_log: True
+  delegate_to: localhost
+  tags:
+  - molecule-notest
+
+- name: Set token variable
+  set_fact:
+    vault_token: '{{ approle_token.json.auth.client_token }}'
+  when: not ansible_check_mode
+  no_log: True
+  delegate_to: localhost
+  tags:
+  - molecule-notest
+
+- name: Check token variable
+  assert:
+    that:
+      - vault_token | default('') | length > 0 
+    msg: 'Vault token variable must not be empty'
+  when: not ansible_check_mode
+  delegate_to: localhost
+
+- name: configuration files
+  template:
+    src: 'templates/{{ item }}'
+    dest: '{{ agent_home }}/{{ item }}'
+    mode: '0644'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+  diff: no
+  loop:
+    - maven-builder.hcl
+    - env-file
+
+- name: maven settings file
+  template:
+    src: templates/settings.xml
+    dest: '{{ agent_home }}/maven/.m2/settings.xml'
+    mode: '0644'
+  become: yes
+  become_user: wwwadm
+  when: not ansible_check_mode
+  diff: no
