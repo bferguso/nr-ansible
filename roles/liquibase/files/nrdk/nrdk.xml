@@ -10,7 +10,7 @@
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   endDelimiter="\n@"
-                  path="sql/schema_validation/v01__create_validation_table.sql"
+                  path="sql/v2021.11.01.1751.1__create_validation_table.sql"
                   relativeToChangelogFile="true"
                   splitStatements="true"
                   stripComments="true"/>
@@ -18,17 +18,23 @@
                   encoding="UTF-8"
                   splitStatements="true"
                   endDelimiter="/"
-                  path="sql/oracle_source_backup/v01__setup_source_backup.sql"
+                  path="sql/v2021.11.01.1752.1__create_source_backup_table.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  splitStatements="true"
+                  endDelimiter="/"
+                  path="sql/v2021.11.01.1755.1__create_iitd_lb_support_pkg.sql"
                   relativeToChangelogFile="true"
                   stripComments="true"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="generate_baseline" runAlways="true" runOnChange="true" failOnError="false" context="generate_baseline">
-        <sqlFile  dbms="oracle"
-                  encoding="UTF-8"
-                  path="sql/schema_validation/v03__generate_baseline.sql"
-                  relativeToChangelogFile="true"
-                  stripComments="true"/>
+    <changeSet  author="qed"  id="generate_baseline_${stage}" runOnChange="true" failOnError="false" context="generate_baseline">
+        <sql
+            dbms="oracle">
+            call iitd_support_pkg.generate_baseline('${stage}')
+        </sql>
     </changeSet>
 
     <changeSet  author="qed"  id="tag" runAlways="true" runOnChange="true" failOnError="false" context="tag">
@@ -70,29 +76,31 @@
     <changeSet  author="qed"  id="baseline_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
-                  endDelimiter="\n@"
-                  path="sql/schema_validation/v04__drop_validation_table.sql"
+                  path="sql/v2021.11.01.1756.1__drop_iitd_lb_support_pkg.sql"
                   relativeToChangelogFile="true"
-                  splitStatements="true"
                   stripComments="true"/>
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   splitStatements="true"
                   endDelimiter=";"
-                  path="sql/oracle_source_backup/v02__drop_source_backup.sql"
+                  path="sql/oracle_source_backup/v2021.11.01.1757.1__drop_source_backup_table.sql"
                   relativeToChangelogFile="true"
                   stripComments="true"/>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  endDelimiter="\n@"
+                  path="sql/v2021.11.01.1758.1__drop_validation_table.sql"
+                  relativeToChangelogFile="true"
+                  splitStatements="true"
+                  stripComments="true"/>
     </changeSet>
+
     <changeSet  author="qed"  id="compile_invalid_objects" runAlways="true" runOnChange="true" context="compile_schema">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="SHOULD_RUN">select decode(count(*), 0, 'DONT_RUN','SHOULD_RUN') from user_objects where status = 'INVALID'</sqlCheck>
         </preConditions>
-        <sqlFile  dbms="oracle"
-                  encoding="UTF-8"
-                  endDelimiter="\n@"
-                  path="sql/schema_validation/r__compile_invalid_objects.sql"
-                  relativeToChangelogFile="true"
-                  stripComments="true"/>
+        <sql
+                dbms="oracle"> call iitd_lb_support_pkg.compile_objects('${compile_exclusion_csv}')</sql>
         <rollback/>
     </changeSet>
 </databaseChangeLog>
