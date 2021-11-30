@@ -6,6 +6,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
+    <!-- Properties file to include from application migration directory -->
+    <properties file="deployment.properties"/>
+
     <changeSet  author="qed"  id="baseline_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
@@ -34,6 +37,13 @@
         <sql
             dbms="oracle">
             call iitd_support_pkg.generate_baseline('${stage}')
+        </sql>
+    </changeSet>
+
+    <changeSet  author="qed"  id="clear_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="generate_baseline">
+        <sql
+                dbms="oracle">
+            call iitd_support_pkg.clear_baseline('${stage}')
         </sql>
     </changeSet>
 
