@@ -83,7 +83,7 @@
                   encoding="UTF-8"
                   splitStatements="true"
                   endDelimiter=";"
-                  path="sql/oracle_source_backup/v2021.11.01.1757.1__drop_source_backup_table.sql"
+                  path="sql/v2021.11.01.1757.1__drop_source_backup_table.sql"
                   relativeToChangelogFile="true"
                   stripComments="true"/>
         <sqlFile  dbms="oracle"
