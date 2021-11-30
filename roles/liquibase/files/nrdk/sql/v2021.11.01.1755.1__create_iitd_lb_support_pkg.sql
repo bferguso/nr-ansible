@@ -15,8 +15,8 @@ create or replace package iitd_lb_support_pkg as
     procedure clear_backup(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
     procedure restore_source(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
 
-    procedure generate_baseline(stage varchar2);
-    procedure clear_baseline(stage varchar2);
+    procedure generate_baseline(p_stage varchar2);
+    procedure clear_baseline(p_stage varchar2);
 
 end iitd_lb_support_pkg;
 /
