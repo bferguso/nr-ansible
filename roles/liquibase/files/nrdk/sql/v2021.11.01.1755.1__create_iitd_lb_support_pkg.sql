@@ -3,6 +3,10 @@
 create or replace package iitd_lb_support_pkg as
     e_uncompiled_objects EXCEPTION;
     PRAGMA exception_init (e_uncompiled_objects, -20001);
+
+    e_unexpected_change EXCEPTION;
+    PRAGMA exception_init (e_unexpected_change, -20002);
+
     TYPE VARCHAR2_RECORD is RECORD
                             (
                                 EXCLUDE_VALUE VARCHAR2(4000)
@@ -17,6 +21,7 @@ create or replace package iitd_lb_support_pkg as
 
     procedure generate_baseline(p_stage varchar2);
     procedure clear_baseline(p_stage varchar2);
+    procedure validate_baseline(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number);
 
 end iitd_lb_support_pkg;
 /
@@ -143,9 +148,6 @@ create or replace package body iitd_lb_support_pkg as
           and source_name = p_source_name
           and source_version = p_version_number;
         execute immediate 'create or replace ' || source_to_restore.text;
-        --if (p_clear_backup) then
-        --    nrdk_clear_backup(p_source_type, p_source_name, p_version_number);
-        --end if;
     end;
 
     -- Functions to generate and clear baseline data
@@ -211,6 +213,29 @@ create or replace package body iitd_lb_support_pkg as
     procedure CLEAR_BASELINE(p_stage varchar2) is
     begin
         delete from nrdk_tmp_validation where stage=p_stage;
+    end;
+
+    procedure validate_baseline(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number) is
+        delta number;
+    begin
+        select count(*)
+            into delta
+            from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = p_pre_stage minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = p_post_stage
+                );
+        if delta <> p_pre_delta then
+            raise_application_error(-20002, 'Pre-migration delta incorrect. Expected ' || p_pre_delta || ' but got '||delta);
+        end if;
+        select count(*)
+            into delta
+            from (
+                select validation_type, validation_data from nrdk_tmp_validation where stage = p_post_stage minus
+                select validation_type, validation_data from nrdk_tmp_validation where stage = p_pre_stage
+            );
+        if delta <> p_post_delta then
+            raise_application_error(-20002, 'Pre-migration delta incorrect. Expected ' || p_post_delta || ' but got '||delta);
+        end if;
     end;
 
 
