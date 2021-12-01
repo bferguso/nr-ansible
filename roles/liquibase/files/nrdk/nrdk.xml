@@ -80,7 +80,7 @@
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}'
                 )</sqlCheck>
         </preConditions>
-        <comment>Results expected</comment>
+        <comment>Results expected ${pre_stage}:0 / ${post_stage}:0 </comment>
     </changeSet>
 
     <changeSet  author="qed"  id="baseline_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
