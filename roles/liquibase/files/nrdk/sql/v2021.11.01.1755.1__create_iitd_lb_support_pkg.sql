@@ -19,9 +19,9 @@ create or replace package iitd_lb_support_pkg as
     procedure clear_backup(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
     procedure restore_source(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
 
-    procedure generate_baseline(p_stage varchar2);
-    procedure clear_baseline(p_stage varchar2);
-    procedure validate_baseline(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number);
+    procedure log_schema_state(p_stage varchar2);
+    procedure clear_schema_state(p_stage varchar2);
+    procedure validate_schema_changes(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number);
 
 end iitd_lb_support_pkg;
 /
@@ -150,8 +150,8 @@ create or replace package body iitd_lb_support_pkg as
         execute immediate 'create or replace ' || source_to_restore.text;
     end;
 
-    -- Functions to generate and clear baseline data
-    procedure GENERATE_BASELINE(p_stage varchar2) is
+    -- Functions to generate and clear schema state data
+    procedure LOG_SCHEMA_STATE(p_stage varchar2) is
     begin
         insert into nrdk_tmp_validation (seq_id, validation_type, stage, validation_data)
         select rownum, 'user_objects', p_stage, object_name || ' ' || object_type || ' ' || status
@@ -210,12 +210,12 @@ create or replace package body iitd_lb_support_pkg as
         order by username, privilege;
     end;
 
-    procedure CLEAR_BASELINE(p_stage varchar2) is
+    procedure CLEAR_SCHEMA_STATE(p_stage varchar2) is
     begin
         delete from nrdk_tmp_validation where stage=p_stage;
     end;
 
-    procedure validate_baseline(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number) is
+    procedure VALIDATE_SCHEMA_CHANGES(p_pre_stage varchar2, p_post_stage varchar2, p_pre_delta number, p_post_delta number) is
         delta number;
     begin
         select count(*)

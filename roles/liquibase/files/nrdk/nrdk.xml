@@ -9,7 +9,7 @@
     <!-- Properties file to include from application migration directory -->
     <property file="deployment.properties"/>
 
-    <changeSet  author="qed"  id="baseline_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup">
+    <changeSet  author="qed"  id="iitd_support_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   endDelimiter="\n@"
@@ -33,17 +33,17 @@
                   stripComments="true"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="generate_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="generate_baseline">
+    <changeSet  author="qed"  id="log_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="log_schema_state">
         <sql
             dbms="oracle">
-            call iitd_lb_support_pkg.generate_baseline('${stage}')
+            call iitd_lb_support_pkg.log_schema_state('${stage}')
         </sql>
     </changeSet>
 
-    <changeSet  author="qed"  id="clear_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="clear_baseline">
+    <changeSet  author="qed"  id="clear_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="clear_schema_state">
         <sql
                 dbms="oracle">
-            call iitd_lb_support_pkg.clear_baseline('${stage}')
+            call iitd_lb_support_pkg.clear_schema_state('${stage}')
         </sql>
     </changeSet>
 
@@ -83,7 +83,7 @@
         <comment>Results expected ${pre_stage}:0 / ${post_stage}:0 </comment>
     </changeSet>
 
-    <changeSet  author="qed"  id="baseline_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
+    <changeSet  author="qed"  id="iitd_support_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   path="sql/v2021.11.01.1756.1__drop_iitd_lb_support_pkg.sql"

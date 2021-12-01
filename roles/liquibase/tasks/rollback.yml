@@ -4,13 +4,13 @@
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
 
-- name: "Clear baseline for stage post_rollback{{cd_version}}"
-  shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=clear_baseline migrate -Dstage=post_rollback{{cd_version}}"
+- name: "Clear schema state for stage post_rollback{{cd_version}}"
+  shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=clear_schema_state migrate -Dstage=post_rollback{{cd_version}}"
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
-  when: lb_overwrite_baseline|bool == True
+  when: lb_overwrite_schema_state|bool == True
 
-- name: "Create baseline for stage post_rollback{{cd_version}}"
-  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=generate_baseline migrate -Dstage=post_rollback{{ cd_version }}"
+- name: "Log schema state for stage post_rollback{{cd_version}}"
+  shell: "chdir={{ lb_working_dir }} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changeLogFile=../nrdk/nrdk.xml --contexts=log_schema_state migrate -Dstage=post_rollback{{ cd_version }}"
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
