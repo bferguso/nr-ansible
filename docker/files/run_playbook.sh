@@ -1,9 +1,6 @@
 export ANSIBLE_COLLECTIONS_PATH=./collections
-echo Using source: $APP_SOURCE
+[ ! -f "./local_vars.yml" ] && touch ./local_vars.yml
 ansible-playbook \
-	-i collections/ansible_collections/bcgov/nr/inventory/qed \
-	--extra-vars playbook_vars_url=$APP_SOURCE \
-	--extra-vars cdconf_target=$CONFIG_TARGET \
-	--extra-vars cd_version=$APP_VERSION \
-	$EXTRA_VARS \
+	-i collections/ansible_collections/bcgov/nr/inventory/localhost \
+	--extra-vars ./local_vars.yml \
 	collections/ansible_collections/bcgov/nr/playbooks/liquibase.yml

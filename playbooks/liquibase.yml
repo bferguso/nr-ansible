@@ -5,6 +5,18 @@
     - bcgov.nr
   vars:
   vars_prompt:
+    - name: "playbook_vars_url"
+      prompt: "URL to playbook vars URL. Provided in JIRA RFD subtask"
+      private: no
+
+    - name: "cdconf_target"
+      prompt: "Target environment (eg dev, dlvr, test, prod)"
+      private: no
+
+    - name: "cd_version"
+      prompt: "Version of migrations artifact. eg 7.4.3-SNAPSHOT"
+      private: no
+
     - name: "username"
       prompt: "IDIR username (eg <username>@gov.bc.ca) including @gov.bc.ca"
       private: no

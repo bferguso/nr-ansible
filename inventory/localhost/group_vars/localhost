@@ -1,0 +1,6 @@
+#artifactory_username: bferguso
+#artifactory_password:
+
+cd_apps_home: /apps_ux
+cd_apps_data: /apps_data
+cd_apps_logs: '{{ cd_apps_data }}/logs'
