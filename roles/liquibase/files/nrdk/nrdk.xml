@@ -47,15 +47,15 @@
         </sql>
     </changeSet>
 
-    <changeSet  author="qed"  id="tag" runAlways="true" runOnChange="true" failOnError="false" context="tag">
+    <changeSet  author="qed"  id="${migration_tag}_tag" context="tag">
         <tagDatabase tag="${migration_tag}"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="pre${migration_tag}_tag" runAlways="true" runOnChange="true" failOnError="false" context="pre_tag">
+    <changeSet  author="qed"  id="pre${migration_tag}_tag" context="pre_tag">
         <tagDatabase tag="pre${migration_tag}"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="verify" runAlways="true" runOnChange="true" context="verify">
+    <changeSet  author="qed"  id="verify" runAlways="true" context="verify">
         <preConditions onFail="HALT" onError="HALT" >
             <sqlCheck expectedResult="${pre_delta}">select count(*) from (
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
