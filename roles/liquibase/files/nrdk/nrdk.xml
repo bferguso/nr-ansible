@@ -36,14 +36,14 @@
     <changeSet  author="qed"  id="generate_baseline_${stage}" runOnChange="true" failOnError="false" context="generate_baseline">
         <sql
             dbms="oracle">
-            call iitd_support_pkg.generate_baseline('${stage}')
+            call iitd_lb_support_pkg.generate_baseline('${stage}')
         </sql>
     </changeSet>
 
-    <changeSet  author="qed"  id="clear_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="generate_baseline">
+    <changeSet  author="qed"  id="clear_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="clear_baseline">
         <sql
                 dbms="oracle">
-            call iitd_support_pkg.clear_baseline('${stage}')
+            call iitd_lb_support_pkg.clear_baseline('${stage}')
         </sql>
     </changeSet>
 
