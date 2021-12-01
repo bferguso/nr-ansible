@@ -69,8 +69,8 @@
         <comment>Results expected ${pre_stage}:${pre_delta}/${post_stage}:${post_delta}</comment>
     </changeSet>
 
-    <changeSet  author="qed"  id="verify_rollback" runAlways="true" runOnChange="true" failOnError="false" context="verify_rollback">
-        <preConditions>
+    <changeSet  author="qed"  id="verify_rollback" runAlways="true" context="verify_rollback">
+        <preConditions onFail="HALT" onError="HALT">
             <sqlCheck expectedResult="0">select count(*) from (
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${post_stage}'
