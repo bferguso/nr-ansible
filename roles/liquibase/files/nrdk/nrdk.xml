@@ -33,7 +33,7 @@
                   stripComments="true"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="generate_baseline_${stage}" runOnChange="true" failOnError="false" context="generate_baseline">
+    <changeSet  author="qed"  id="generate_baseline_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="generate_baseline">
         <sql
             dbms="oracle">
             call iitd_lb_support_pkg.generate_baseline('${stage}')

@@ -35,4 +35,4 @@ lb_migrations_artifact:
   name: "{{ artifact_id+'-'+cd_version+'-'+artifact_classifier+'.'+artifact_type }}"
 
 
-lb_overwrite_baseline: "{{ overwrite_baseline | default(False) }}"
+lb_overwrite_baseline: "{{ overwrite_baseline | default(True) }}"
