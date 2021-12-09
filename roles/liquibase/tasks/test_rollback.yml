@@ -1,6 +1,6 @@
 ---
 - name: "Run migration"
-  include_tasks: migrate.yml
+  include_tasks: update.yml
 
 - name: "Rollback"
   include_tasks: rollback.yml

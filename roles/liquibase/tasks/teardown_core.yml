@@ -3,6 +3,6 @@
     var: lb_working_dir
 
 - name: "Teardown core IITD migration framework"
-  shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changelogFile=../nrdk/nrdk.xml --contexts=teardown  migrate"
+  shell: "chdir={{lb_working_dir}} JAVA_HOME={{ cd_app_home }}/jdk {{ lb_liquibase_staging_dir }}/liquibase --changelogFile=../nrdk/nrdk.xml --contexts=teardown  update"
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"

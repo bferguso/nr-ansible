@@ -18,13 +18,12 @@ lb_liquibase_download_url: "https://github.com/liquibase/liquibase/releases/down
 cd_migrations_base_dir: "{{ migrations_base_dir | default('cd/migrations') }}"
 lb_working_dir: "{{ cd_app_home }}/{{ working_dir | default(cd_migrations_base_dir+'/'+db_username) }}"
 lb_log_level: "{{ log_level | default('info') }}"
-lb_iitd_core_dir: "{{ iitd_core_dir | default('/apps_ux/FFS/ffs-db/cd/migrations/nrdk') }}"
 
 lb_changelog_file: "{{ changelog_file | default('changelog.xml') }}"
 lb_db_url: "{{ db_url }}"
 lb_db_username: "{{ db_username }}"
 lb_db_password: "{{ db_password }}"
-lb_actions: "{{ (db_actions | default('migrate')).split(',') }}"
+lb_actions: "{{ (db_actions | default('update')).split(',') }}"
 
 lb_migrations_artifact:
   group_id: "{{ artifact_group_id }}"

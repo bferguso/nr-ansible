@@ -32,21 +32,21 @@
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
 
-- debug:
-   var: lb_migrations_artifact
+- name: "Remove previous version of artifact and migrations working dir if they exist"
+  file:
+    path: "{{ item }}"
+    state: absent
+  become: yes
+  become_user: "{{ lb_deploy_scripts_user }}"
+  with_items:
+    - "{{ lb_working_dir }}"
+    - "{{ cd_app_home }}/{{ lb_migrations_artifact.name }}"
 
 - name: "copy nrdk framework"
   ansible.builtin.copy:
     src: "nrdk"
     dest: "{{ cd_app_home }}/{{ cd_migrations_base_dir }}"
     mode: 0700
-  become: yes
-  become_user: "{{ lb_deploy_scripts_user }}"
-
-- name: "Remove previous version of artifact if it exists"
-  file:
-    path: "{{ cd_app_home }}/{{ lb_migrations_artifact.name }}"
-    state: absent
   become: yes
   become_user: "{{ lb_deploy_scripts_user }}"
 
