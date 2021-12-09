@@ -13,7 +13,7 @@
 
 - name: "Flatten target variables for vault_secrets"
   set_fact:
-     "{{ item.key }}": "{{ item.value }}"
+     "{{db_schemaname}}_{{ item.key }}": "{{ item.value }}"
   with_dict:
      - "{{ vault_secrets['data']['data'] }}"
   no_log: True
