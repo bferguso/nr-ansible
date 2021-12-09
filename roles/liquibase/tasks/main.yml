@@ -25,7 +25,7 @@
 
 - name: "Download JDBC library"
   get_url:
-    url: "{{ db_jdbc_driver_artiractory_url }}"
+    url: "{{ lb_jdbc_driver_artifactory_url }}"
     dest: "{{lb_liquibase_staging_dir}}/lib/"
     url_username: "{{ artifactory_username }}"
     url_password: "{{ artifactory_password }}"
