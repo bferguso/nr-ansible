@@ -3,6 +3,9 @@
 #cdconf_target: dlvr
 #cd_version: 7.4.3-SNAPSHOT
 
+# Vault token
+#vault_token:
+
 # IDIR Info
 #username: <idir>@gov.bc.ca
 #password:
