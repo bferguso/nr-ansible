@@ -11,6 +11,7 @@
      dest: "{{ lookup('env','PWD') }}/playbook_vars.yml"
      url_username: "{{ username }}"
      url_password: "{{ password }}"
+     force: yes
 
 - name: Get variables from configuration file
   include_vars: "{{ lookup('env','PWD') }}/playbook_vars.yml"
