@@ -8,13 +8,12 @@
   become_user: wwwadm
 
 - name: Download Hashicorp Vault
-  environment: '{{ proxy_env }}'
+  environment: '{{ proxy_env | default({}) }}'
   get_url:
     url: 'https://releases.hashicorp.com/vault/1.7.1/vault_1.7.1_linux_amd64.zip'
     dest: '/tmp/vault_1.7.1_linux_amd64.zip'
     checksum: 'sha256:https://releases.hashicorp.com/vault/1.7.1/vault_1.7.1_SHA256SUMS'
     mode: '0644'
-    use_proxy: yes
   become: yes
   become_user: wwwadm
 

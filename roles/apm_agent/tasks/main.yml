@@ -92,6 +92,7 @@
     url_password: '{{ artifactory_pass }}'
     dest: '/tmp/{{ item | basename }}'
     mode: '0644'
+    force: yes
   loop:
     - '{{ apm_agent.url.zip }}'
   become: yes
