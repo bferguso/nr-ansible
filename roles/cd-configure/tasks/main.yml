@@ -7,7 +7,7 @@
 
 - name: Get playbook variables file
   get_url:
-     url: "{{ playbook_vars_url }}"
+     url: "{{ playbook_vars_url | trim }}"
      dest: "{{ lookup('env','PWD') }}/playbook_vars.yml"
      url_username: "{{ username }}"
      url_password: "{{ password }}"
