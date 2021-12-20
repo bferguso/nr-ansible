@@ -39,6 +39,7 @@
     - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/filter'
     - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/input'
     - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/parser'
+    - '{{ apm_agent_home }}/db/fluent-bit-logs-{{ app | lower }}-{{ component | lower }}'
   become: yes
   become_user: wwwadm
 
