@@ -30,7 +30,7 @@
       private: no
 
     - name: "db_actions"
-      prompt: "Liquibase Actions - one or more CSV of update, verify, rollback, test_rollback, teardown_core, run in order.)"
+      prompt: "Liquibase Actions - one or more CSV of update, verify, rollback, test_rollback, teardown_core, status, run in order.)"
       private: no
      # Required variables
      # User:
