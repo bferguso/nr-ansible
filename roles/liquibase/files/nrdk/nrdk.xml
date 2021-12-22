@@ -28,7 +28,33 @@
                   encoding="UTF-8"
                   splitStatements="true"
                   endDelimiter="/"
-                  path="sql/v2021.11.01.1755.1__create_iitd_lb_support_pkg.sql"
+                  path="sql/v2021.11.01.1754.1__create_iitd_lb_support_pkg.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="iitd_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
+        <preConditions onFail="WARN" onError="HALT" onFailMessage="Oracle version is 11 or earlier. Using legacy package body">
+            <sqlCheck expectedResult="STANDARD">select decode(regexp_replace(version,'\..*',''),'11','LEGACY','STANDARD') from v$instance</sqlCheck>
+        </preConditions>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  splitStatements="true"
+                  endDelimiter="/"
+                  path="sql/v2021.11.01.1755.1__create_iitd_lb_support_pkg_body.sql"
+                  relativeToChangelogFile="true"
+                  stripComments="true"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="iitd_legacy_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
+        <preConditions onFail="CONTINUE" onError="HALT">
+            <sqlCheck expectedResult="LEGACY">select decode(regexp_replace(version,'\..*',''),'11','LEGACY','STANDARD') from v$instance</sqlCheck>
+        </preConditions>
+        <sqlFile  dbms="oracle"
+                  encoding="UTF-8"
+                  splitStatements="true"
+                  endDelimiter="/"
+                  path="sql/v2021.11.01.1755.1__create_iitd_legacy_lb_support_pkg_body.sql"
                   relativeToChangelogFile="true"
                   stripComments="true"/>
     </changeSet>
