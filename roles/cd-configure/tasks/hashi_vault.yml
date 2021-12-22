@@ -1,0 +1,19 @@
+---
+# Tried to do this with the hashi_vault plugin, but without success
+- name: Get secrets from vault
+  set_fact:
+    vault_secrets: "{{ lookup('url', vault_url+'/'+vault_context, headers={'X-Vault-Token':vault_token} ) }}"
+
+- name: "Create list of secret keys"
+  set_fact:
+     secret_keys: "{{ vault_secrets['data']['data'].keys() | list }}"
+
+- name: "Available Vault secret keys"
+  debug: var=secret_keys
+
+- name: "Flatten target variables for vault_secrets"
+  set_fact:
+     "{{db_username}}_{{ item.key }}": "{{ item.value }}"
+  with_dict:
+     - "{{ vault_secrets['data']['data'] }}"
+  no_log: True

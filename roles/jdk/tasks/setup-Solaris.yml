@@ -1,0 +1,70 @@
+---
+# tasks file for java on solaris
+- name: 'Download Java {{ jdk_version }}'
+  get_url:
+    url: "{{ jdk_download_url }}"
+    dest: "/tmp/{{ jdk_archive }}"
+    checksum: "{{ jdk_archive_checksum }}"
+    validate_certs: False
+    timeout: 100
+  tags: ["java","jdk","java8"]
+  when: jdk_version == 8
+
+- name: 'Download 32 bit Java {{ jdk_version }}'
+  get_url:
+     url: "{{ jdk_32_bit_url }}"
+     dest: "{{ jdk_download_dir }}/{{ jdk_32_bit_archive }}"
+     checksum: "{{ jdk_32_bit_archive_checksum }}"
+     validate_certs: False
+  become: yes
+  become_user: "{{ install_user }}"
+  tags: ["java","jdk"]
+  when: jdk_version == 7
+
+- name: 'Download 64 bit Java {{ jdk_version }}'
+  get_url:
+     url: "{{ jdk_64_bit_url }}"
+     dest: "{{ jdk_download_dir }}/{{ jdk_64_bit_archive }}"
+     checksum: "{{ jdk_64_bit_archive_checksum }}"
+     validate_certs: False
+  become: yes
+  become_user: "{{ install_user }}"
+  tags: ["java","jdk"]
+  when: jdk_version == 7
+
+- name: 'Extract Java {{ jdk_archive }} to {{ jdk_home }}'
+  unarchive:
+    src: "{{ jdk_download_dir }}/{{ jdk_archive }}"
+    dest: "{{ jdk_home }}"
+    remote_src: yes
+    extra_opts: [ '--strip-component=1', '--show-stored-names' ]
+    creates: "{{ jdk_home }}/bin/java"
+  become: yes
+  become_user: "{{ install_user }}"
+  when: jdk_version == 8
+  tags: ["java","jdk","java8"]
+
+- name: 'Extract 32 bit Java {{ java32_archive }} to {{ jdk_home }}'
+  unarchive:
+    src: "{{ jdk_download_dir }}/{{ java32_archive }}"
+    dest: "{{ jdk_home }}"
+    remote_src: yes
+    extra_opts: [ '--strip-component=1', '--show-stored-names' ]
+    creates: "{{ jdk_home }}/bin/java"
+  become: yes
+  become_user: "{{ install_user }}"
+  when: jdk_version == 7
+  tags: ["java","jdk"]
+
+- name: 'Extract 64 bit Java {{ java64_archive }} to {{ jdk_home }}'
+  unarchive:
+    src: "{{ jdk_download_dir }}/{{ java64_archive }}"
+    dest: "{{ jdk_home }}"
+    remote_src: yes
+    extra_opts: [ '--strip-component=1', '--show-stored-names' ]
+    keep_newer: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: yes
+  become_user: "{{ install_user }}"
+  when: jdk_version == 7
+  tags: ["java","jdk"]

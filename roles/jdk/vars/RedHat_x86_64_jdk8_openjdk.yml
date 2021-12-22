@@ -1,0 +1,7 @@
+# roles/jdk/vars/RedHat_x86_64_openjdk8.yml
+
+jdk_archive:
+  version: "1.8.0_40"
+  filename: "java-se-8u40-ri.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/openjdk/java-se-8u40-ri.tar.gz"
+  checksum: "sha1:606984531e3eeddba6be5ac626a229ef283c5de0"

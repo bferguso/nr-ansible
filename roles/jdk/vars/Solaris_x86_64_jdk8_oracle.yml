@@ -1,0 +1,7 @@
+# roles/jdk/vars/Solaris_x86_64_jdk8.yml
+
+jdk_archive:
+  version: "1.8.0_144"
+  filename: "jdk-8u144-solaris-x64.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk8/jdk-8u144-solaris-x64.tar.gz"
+  checksum : "sha1:22374b63ca8719a8b19b55134e3f3cbb11812f44"

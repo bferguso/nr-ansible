@@ -1,0 +1,57 @@
+---
+- name: liquibase migration
+  hosts: deployment-servers
+  collections:
+    - bcgov.nr
+  vars:
+  vars_prompt:
+    - name: "playbook_vars_url"
+      prompt: "URL to playbook vars URL. Provided in JIRA RFD subtask"
+      private: no
+
+    - name: "cdconf_target"
+      prompt: "Target environment (eg dev, dlvr, test, prod)"
+      private: no
+
+    - name: "cd_version"
+      prompt: "Version of migrations artifact. eg 7.4.3-SNAPSHOT"
+      private: no
+
+    - name: "username"
+      prompt: "IDIR username (eg <username>@gov.bc.ca) including @gov.bc.ca"
+      private: no
+
+    - name: "password"
+      prompt: "IDIR password"
+      private: yes
+
+    - name: "vault_token"
+      prompt: "Vault token. (Can be obtained by logging in to https://vault-iit.apps.silver.devops.gov.bc.ca/ui/vault/auth?with=oidc. Leave blank if not using NRMs Vault.)"
+      private: no
+
+    - name: "db_actions"
+      prompt: "Liquibase Actions - one or more CSV of update, verify, rollback, test_rollback, teardown_core, run in order.)"
+      private: no
+     # Required variables
+     # User:
+     # artifactory_username
+     # artifactory_password
+     # playbook_vars_url
+     # cdconf_target
+     # cd_version
+
+  roles:
+    - name: cd-configure
+
+    # install a JDK specific to this application
+    - name: jdk
+      vars:
+        jdk_version: '8'
+        cd_app_install: '{{ cd_app_home }}' # cd_app_home provided by cd-configure
+        jdk_install_as: 'runner'
+
+    - name: liquibase
+      vars:
+         artifact_version: "{{ cd_version }}"
+         #TODO - This could be done as a configuration variable in the liquibase role
+         #db_jdbc_driver_artifactory_url: "https://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/com.oracle/ojdbc8-19.3.0.0.jar"

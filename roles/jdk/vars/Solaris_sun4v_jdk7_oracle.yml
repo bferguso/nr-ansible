@@ -1,0 +1,15 @@
+# roles/jdk/vars/Solaris_sun4v_jdk7.yml
+
+
+jdk_archive:
+  version: "1.7.0_141"
+  filename: "jdk-7u141-solaris-sparc.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk7/jdk-7u141-solaris-sparc.tar.gz"
+  checksum : "sha1:1b6a5def10c5bb6dcbddec4e0462f105edaddff3"
+
+#64 bit jdk for solaris sparc  
+jdk_64bit:
+  version: "1.7.0_141"
+  filename: "jdk-7u141-solaris-sparcv9.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk7/jdk-7u141-solaris-sparcv9.tar.gz"
+  checksum : "sha1:9f4b156c484be520b165064745c2d66495959226"

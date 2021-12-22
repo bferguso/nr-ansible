@@ -1,0 +1,7 @@
+# roles/jdk/vars/RedHat_x86_64_openjdk7.yml
+
+jdk_archive:
+  version: "1.7.0_75"
+  filename: "java-se-7u75-ri.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/openjdk/java-se-7u75-ri.tar.gz"
+  checksum: "sha1:b3f6f946dcfc962923947889fd283fdbcfffbdcb"

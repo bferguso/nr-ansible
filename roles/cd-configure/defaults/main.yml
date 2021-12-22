@@ -1,0 +1,24 @@
+cdconf_variables_dir: "{{playbook_dir}}/vars"
+artifactory_username: "{{ username }}"
+artifactory_password: "{{ password }}"
+
+vault_url: https://vault-iit.apps.silver.devops.gov.bc.ca/v1/apps/data
+vault_targets:
+   test: "test"
+   prod: "prod"
+
+# Secret key is always db_password
+#vault path of secrets in dev:
+# /apps/dev/<lower project>/<git repo>/<lower target>_<lower schema name>
+# eg: /apps/dev/cfsweb/cfsweb-db/dlvr_acs
+#     /apps/dev/cfsweb/cfsweb-db/dlvr_csd_web
+#     /apps/dev/ffs/fsbwhse-db/dlvr_fsbwhse
+
+#vault path of secrets in higher environments
+# /apps/<lower target>/<lower project>/<git repo>
+# eg: /apps/test/ffs/ffs-db/db_password
+#     /apps/prod/ffs/ffs-db
+
+vault_target: "{{ vault_targets[(cdconf_target | lower)] | default('dev') }}"
+sub_context: "{{ '' if vault_target != 'dev' else '/'+(cdconf_target | lower)+'_'+(db_username|lower)}}"
+vault_context: "{{vault_target}}/{{ project | lower }}/{{ artifact_id | lower }}{{sub_context}}"

@@ -1,0 +1,7 @@
+# roles/jdk/vars/RedHat_x86_64_jdk7.yml
+
+jdk_archive:
+  version: "1.7.0_161"
+  filename: "jdk-7u161-linux-x64.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk7/jdk-7u161-linux-x64.tar.gz"
+  checksum: "sha1:a48a30652af23bcff397f6574769d45f3e3d8a1c"

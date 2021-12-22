@@ -1,0 +1,13 @@
+# roles/jdk/vars/RedHat_x86_64_jdk8.yml
+
+#jdk_archive:
+#  version: "1.8.0_144"
+#  filename: "jdk-8u144-linux-x64.tar.gz"
+#  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk8/jdk-8u144-linux-x64.tar.gz"
+#  checksum: "sha1:d4c4f02908d39827393dd77f9eb8da348363efda"
+
+jdk_archive:
+  version: "1.8.0_192"
+  filename: "jdk-8u192-linux-x64.tar.gz"
+  url: "{{ artifactory_url }}/ext-binaries-local/com.oracle/jdk8/jdk-8u192-linux-x64.tar.gz"
+  checksum: "sha1:9e482a7ded535f14916f91510b78904eace28e49"

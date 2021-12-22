@@ -1,0 +1,31 @@
+---
+- name: "Ensure the target environment has been specified"
+  assert:
+     that:
+        - cdconf_target is defined
+        - cd_version is defined
+
+- name: Get playbook variables file
+  get_url:
+     url: "{{ playbook_vars_url | trim }}"
+     dest: "{{ lookup('env','PWD') }}/playbook_vars.yml"
+     url_username: "{{ username }}"
+     url_password: "{{ password }}"
+     force: yes
+
+- name: Get variables from configuration file
+  include_vars: "{{ lookup('env','PWD') }}/playbook_vars.yml"
+
+- name: "Flatten target variables for {{ cdconf_target }}"
+  set_fact:
+     "{{ item.key }}": "{{item.value}}"
+  with_dict:
+     - "{{ lookup('vars', cdconf_target) }}"
+
+- name: "Get secrets from HashiCorp Vault"
+  include_tasks: hashi_vault.yml
+  when: (vault_token | length ) > 0
+
+- name: "Set variables for liquibase deployment"
+  set_fact:
+     cd_app_home: "/apps_ux/{{ project }}/{{ artifact_id }}"
