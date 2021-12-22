@@ -9,7 +9,7 @@
     <!-- Properties file to include from application migration directory -->
     <property file="deployment.properties"/>
 
-    <changeSet  author="qed"  id="iitd_support_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup">
+    <changeSet  author="qed"  id="iitd_support_setup" runAlways="true" runOnChange="true" failOnError="false" context="setup" dbms="oracle">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   endDelimiter="\n@"
@@ -33,14 +33,14 @@
                   stripComments="true"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="log_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="log_schema_state">
+    <changeSet  author="qed"  id="log_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="log_schema_state" dbms="oracle">
         <sql
             dbms="oracle">
             call iitd_lb_support_pkg.log_schema_state('${stage}')
         </sql>
     </changeSet>
 
-    <changeSet  author="qed"  id="clear_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="clear_schema_state">
+    <changeSet  author="qed"  id="clear_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="false" context="clear_schema_state" dbms="oracle">
         <sql
                 dbms="oracle">
             call iitd_lb_support_pkg.clear_schema_state('${stage}')
@@ -55,7 +55,7 @@
         <tagDatabase tag="pre${migration_tag}"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="verify" runAlways="true" context="verify">
+    <changeSet  author="qed"  id="verify" runAlways="true" context="verify" dbms="oracle">
         <preConditions onFail="HALT" onError="HALT" >
             <sqlCheck expectedResult="${pre_delta}">select count(*) from (
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
@@ -69,7 +69,7 @@
         <comment>Results expected ${pre_stage}:${pre_delta}/${post_stage}:${post_delta}</comment>
     </changeSet>
 
-    <changeSet  author="qed"  id="verify_rollback" runAlways="true" context="verify_rollback">
+    <changeSet  author="qed"  id="verify_rollback" runAlways="true" context="verify_rollback" dbms="oracle">
         <preConditions onFail="HALT" onError="HALT">
             <sqlCheck expectedResult="0">select count(*) from (
                 select validation_type, validation_data from nrdk_tmp_validation where stage = '${pre_stage}' minus
@@ -83,7 +83,7 @@
         <comment>Results expected ${pre_stage}:0 / ${post_stage}:0 </comment>
     </changeSet>
 
-    <changeSet  author="qed"  id="iitd_support_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown">
+    <changeSet  author="qed"  id="iitd_support_teardown" runAlways="true" runOnChange="true" failOnError="false" context="teardown" dbms="oracle">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   path="sql/v2021.11.01.1756.1__drop_iitd_lb_support_pkg.sql"
@@ -105,7 +105,7 @@
                   stripComments="true"/>
     </changeSet>
 
-    <changeSet  author="qed"  id="compile_invalid_objects" runAlways="true" runOnChange="true" context="compile_schema">
+    <changeSet  author="qed"  id="compile_invalid_objects" runAlways="true" runOnChange="true" context="compile_schema" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="SHOULD_RUN">select decode(count(*), 0, 'DONT_RUN','SHOULD_RUN') from user_objects where status = 'INVALID'</sqlCheck>
         </preConditions>
