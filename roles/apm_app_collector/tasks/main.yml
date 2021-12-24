@@ -33,7 +33,7 @@
   file:
     path: '{{ item }}'
     state: directory
-    mode: '0755'
+    mode: '0775'
   loop:
     - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}'
     - '{{ apm_agent_home }}/conf/{{ app | lower }}-{{ component | lower }}/filter'
