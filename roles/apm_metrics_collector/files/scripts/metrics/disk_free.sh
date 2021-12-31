@@ -1,7 +1,7 @@
 #!/bin/bash
 
 df -P | \
-  jq -R -s '
+  /sw_ux/bin/jq -R -s '
     {
       disk: [
         split("\n") |
@@ -13,4 +13,4 @@ df -P | \
         end
       ]
     }' | \
-    jq -c
+    /sw_ux/bin/jq -c
