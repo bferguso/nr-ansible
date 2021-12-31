@@ -17,7 +17,7 @@
   tags:
   - uninstall
 
-- name: Create apache conf directories
+- name: Create metrics conf directories
   file:
     path: '{{ item }}'
     state: directory
@@ -38,10 +38,38 @@
   become: yes
   become_user: wwwadm
 
+- name: Create metrics scripts directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ apm_agent_home }}/scripts/metrics'
+  become: yes
+  become_user: wwwadm
+
+- name: Script files
+  copy:
+    src: 'scripts'
+    dest: '{{ apm_agent_home }}'
+    mode: '0755'
+  become: yes
+  become_user: wwwadm
+
 - name: Remove metrics config
   file:
     state: absent
     path: '{{ apm_agent_home }}/conf/metrics'
+  become: yes
+  become_user: wwwadm
+  tags:
+  - never
+  - uninstall
+
+- name: Remove metrics scripts
+  file:
+    state: absent
+    path: '{{ apm_agent_home }}/scripts/metrics'
   become: yes
   become_user: wwwadm
   tags:
