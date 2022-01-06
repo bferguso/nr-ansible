@@ -24,6 +24,7 @@
     mode: '0755'
   loop:
     - '{{ apm_agent_home }}/conf/deploy'
+    - '{{ apm_agent_home }}/conf/deploy/filter'
     - '{{ apm_agent_home }}/conf/deploy/input'
     - '{{ apm_agent_home }}/conf/deploy/parser'
   become: yes
@@ -35,6 +36,7 @@
     dest: '{{ apm_agent_home }}/conf/deploy/{{ item }}'
     mode: '0664'
   loop:
+    - filter/filters.conf
     - input/inputs.conf
     - parser/parsers.conf
   become: yes
