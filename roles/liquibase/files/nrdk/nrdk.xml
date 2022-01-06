@@ -35,7 +35,7 @@
 
     <changeSet  author="qed"  id="iitd_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
         <preConditions onFail="WARN" onError="HALT" onFailMessage="Oracle version is 11 or earlier. Using legacy package body">
-            <sqlCheck expectedResult="STANDARD">select decode(regexp_replace(version,'\..*',''),'11','LEGACY','STANDARD') from v$instance</sqlCheck>
+            <sqlCheck expectedResult="STANDARD">select decode(min(regexp_replace(regexp_replace(banner,'\..*',''),'.* ','')),'11','LEGACY','STANDARD') from v$version</sqlCheck>
         </preConditions>
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
@@ -48,7 +48,7 @@
 
     <changeSet  author="qed"  id="iitd_legacy_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
         <preConditions onFail="CONTINUE" onError="HALT">
-            <sqlCheck expectedResult="LEGACY">select decode(regexp_replace(version,'\..*',''),'11','LEGACY','STANDARD') from v$instance</sqlCheck>
+            <sqlCheck expectedResult="LEGACY">select decode(min(regexp_replace(regexp_replace(banner,'\..*',''),'.* ','')),'11','LEGACY','STANDARD') from v$version</sqlCheck>
         </preConditions>
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
