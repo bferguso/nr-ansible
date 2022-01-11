@@ -106,6 +106,14 @@ create or replace package body iitd_lb_support_pkg as
                                         p_version_number varchar2,
                                         p_replace_existing varchar2 default 'false') return VARCHAR2 is
         backup_exists boolean;
+        procedure do_backup_source(p_source_type varchar2,
+                                   p_source_name varchar2,
+                                   p_version_number varchar2) is
+            pragma AUTONOMOUS_TRANSACTION;
+        begin
+            backup_source(p_source_type, p_source_name, p_version_number);
+            commit;
+        end;
     begin
         backup_exists := source_backup_exists(p_source_type, p_source_name, p_version_number);
         if (backup_exists) then
@@ -117,7 +125,7 @@ create or replace package body iitd_lb_support_pkg as
                return 'SUCCESS';
            end if;
         end if;
-        BACKUP_SOURCE(p_source_type, p_source_name, p_version_number);
+        do_backup_source(p_source_type, p_source_name, p_version_number);
         return 'SUCCESS';
     EXCEPTION
         when OTHERS then
