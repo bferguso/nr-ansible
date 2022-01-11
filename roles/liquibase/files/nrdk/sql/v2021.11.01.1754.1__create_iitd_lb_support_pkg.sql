@@ -16,6 +16,19 @@ create or replace package iitd_lb_support_pkg as
     procedure compile_objects(csv_exclude_list varchar2);
 
     procedure backup_source(source_type varchar2, source_name varchar2, version_number varchar2);
+    /* Function to perform source backup as a precondition. Behaviour is:
+       1) If backup already exists:
+          a) p_replace_existing == 'true' ? Delete previous version and perform new backup : NOOP  then return SUCCESS
+       2) If backup does not exist, backup source and return SUCCESS
+       IF SQLException occurs then return FAIL.
+
+       Returns SUCCESS if successful, and FAIL otherwise.
+
+     */
+    function backup_source_precondition(p_source_type varchar2,
+                                        p_source_name varchar2,
+                                        p_version_number varchar2,
+                                        p_replace_existing varchar2 default 'false') return VARCHAR2;
     procedure clear_backup(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
     procedure restore_source(p_source_type varchar2, p_source_name varchar2, p_version_number varchar2);
 
