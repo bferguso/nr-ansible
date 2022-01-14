@@ -88,6 +88,50 @@ create or replace package body iitd_lb_support_pkg as
         end if;
     end;
 
+    function SOURCE_BACKUP_EXISTS(p_source_type varchar2,
+                                  p_source_name varchar2,
+                                  p_version_number varchar2) return BOOLEAN is
+        rowcount number;
+    begin
+        select count(*) into rowcount
+            from nrdk_tmp_source
+                where source_type = p_source_type
+                  and source_name = p_source_name
+                  and source_version = p_version_number;
+        return rowcount > 0;
+    end;
+
+    function BACKUP_SOURCE_PRECONDITION(p_source_type varchar2,
+                                        p_source_name varchar2,
+                                        p_version_number varchar2,
+                                        p_replace_existing varchar2 default 'false') return VARCHAR2 is
+        backup_exists boolean;
+        procedure do_backup_source(p_source_type varchar2,
+                                   p_source_name varchar2,
+                                   p_version_number varchar2) is
+            pragma AUTONOMOUS_TRANSACTION;
+        begin
+            backup_source(p_source_type, p_source_name, p_version_number);
+            commit;
+        end;
+    begin
+        backup_exists := source_backup_exists(p_source_type, p_source_name, p_version_number);
+        if (backup_exists) then
+           if (p_replace_existing = 'true') then
+               -- Need to replace the existing version so clear the previous version
+               CLEAR_BACKUP(p_source_type, p_source_name, p_version_number);
+           else
+               -- Don't replace the existing version so just return success
+               return 'SUCCESS';
+           end if;
+        end if;
+        do_backup_source(p_source_type, p_source_name, p_version_number);
+        return 'SUCCESS';
+    EXCEPTION
+        when OTHERS then
+            return 'FAIL';
+    end backup_source_precondition;
+
     procedure BACKUP_SOURCE(source_type varchar2, source_name varchar2, version_number varchar2) is
         cursor source_lines(source_type varchar2, source_lines varchar2) is
             select *
