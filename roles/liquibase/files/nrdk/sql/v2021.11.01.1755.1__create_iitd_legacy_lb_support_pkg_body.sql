@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset qed:iitd_legacy_support_pkg_body splitStatements:true endDelimiter:/
+--changeset qed:iitd_legacy_support_pkg_body stripComments:false splitStatements:true endDelimiter:/
 --preconditions onFail:CONTINUE onError:HALT
 --precondition-sql-check expectedResult:LEGACY select decode(min(regexp_replace(regexp_replace(banner,'\..*',''),'.* ','')),'11','LEGACY','STANDARD') from v$version/
 create or replace package body iitd_lb_support_pkg as
@@ -125,6 +125,14 @@ create or replace package body iitd_lb_support_pkg as
           and source_name = p_source_name
           and source_version = p_version_number;
         execute immediate 'create or replace ' || source_to_restore.text;
+    EXCEPTION
+        when OTHERS then
+            -- Catch Success with Compilation Error and ignore. When rolling back PL/SQL packages, the body is reverted
+            -- first and if is paired with a Spec change it will fail until the Spec is rolled back too. The recompile
+            -- happens after the rollback.
+            if SQLCODE <> -24344 then
+                raise;
+            end if;
     end;
 
     -- Functions to generate and clear schema state data
