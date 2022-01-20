@@ -145,3 +145,6 @@
 
 - name: Add run file
   import_tasks: add-run-file.yml
+
+- name: Add logrotation for fluent bit agent
+  import_tasks: logrotate.yml

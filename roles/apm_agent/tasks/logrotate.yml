@@ -1,0 +1,28 @@
+---
+- name: Check for logrotate
+  ansible.builtin.command: which logrotate
+  register: logrotate
+  become: yes
+  become_user: wwwsvr
+  check_mode: no
+
+- name: logrotate configuration file
+  template:
+    src: 'templates/conf/fluent-bit-logrotate.conf'
+    dest: '/apps_ux/wwwsvr/fluent-bit-logrotate.conf'
+    mode: '0664'
+  become: yes
+  become_user: wwwsvr
+  when: logrotate.rc == 0 and not ansible_check_mode
+
+- name: crontab for logrotate
+  ansible.builtin.cron:
+    name: "Logrotate for Fluent Bit"
+    minute: "59"
+    hour: "23"
+    user: wwwsvr
+    job: "/sbin/logrotate /apps_ux/wwwsvr/fluent-bit-logrotate.conf --state /apps_ux/wwwsvr/fluent-bit-logrotate-state --verbose"
+  become: yes
+  become_user: wwwsvr
+  when: logrotate.rc == 0 and not ansible_check_mode
+  

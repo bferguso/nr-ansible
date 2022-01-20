@@ -24,13 +24,16 @@
                   path="sql/v2021.11.01.1752.1__create_source_backup_table.sql"
                   relativeToChangelogFile="true"
                   stripComments="true"/>
+    </changeSet>
+
+    <changeSet  author="qed"  id="iitd_support_pkg_spec" runAlways="true" runOnChange="true" failOnError="false" context="setup">
         <sqlFile  dbms="oracle"
                   encoding="UTF-8"
                   splitStatements="true"
                   endDelimiter="/"
                   path="sql/v2021.11.01.1754.1__create_iitd_lb_support_pkg.sql"
                   relativeToChangelogFile="true"
-                  stripComments="true"/>
+                  stripComments="false"/>
     </changeSet>
 
     <changeSet  author="qed"  id="iitd_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
@@ -43,7 +46,7 @@
                   endDelimiter="/"
                   path="sql/v2021.11.01.1755.1__create_iitd_lb_support_pkg_body.sql"
                   relativeToChangelogFile="true"
-                  stripComments="true"/>
+                  stripComments="false"/>
     </changeSet>
 
     <changeSet  author="qed"  id="iitd_legacy_support_pkg_body" runAlways="true" runOnChange="true" failOnError="false" context="setup">
@@ -56,7 +59,7 @@
                   endDelimiter="/"
                   path="sql/v2021.11.01.1755.1__create_iitd_legacy_lb_support_pkg_body.sql"
                   relativeToChangelogFile="true"
-                  stripComments="true"/>
+                  stripComments="false"/>
     </changeSet>
 
     <changeSet  author="qed"  id="log_schema_state_${stage}" runAlways="true" runOnChange="true" failOnError="true" context="log_schema_state" dbms="oracle">

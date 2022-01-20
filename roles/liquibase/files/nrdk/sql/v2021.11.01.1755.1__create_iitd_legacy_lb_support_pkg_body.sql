@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset qed:iitd_legacy_support_pkg_body splitStatements:true endDelimiter:/
+--changeset qed:iitd_legacy_support_pkg_body stripComments:false splitStatements:true endDelimiter:/
 --preconditions onFail:CONTINUE onError:HALT
 --precondition-sql-check expectedResult:LEGACY select decode(min(regexp_replace(regexp_replace(banner,'\..*',''),'.* ','')),'11','LEGACY','STANDARD') from v$version/
 create or replace package body iitd_lb_support_pkg as
@@ -98,10 +98,15 @@ create or replace package body iitd_lb_support_pkg as
         existing_source clob;
     begin
         dbms_lob.CREATETEMPORARY(existing_source, true);
-        for source_line in source_lines(source_type, source_name)
-            loop
-                dbms_lob.APPEND(existing_source, source_line.text);
-            end loop;
+        if (upper(source_type) = 'VIEW') then
+            select text into view_text from user_views where view_name = source_name;
+            dbms_lob.APPEND(existing_source, view_text);
+        else
+            for source_line in source_lines(source_type, source_name)
+                loop
+                    dbms_lob.APPEND(existing_source, source_line.text);
+                end loop;
+        end if;
         insert into nrdk_tmp_source(source_name, source_type, source_version, text)
         values (source_name, source_type, version_number, existing_source);
     end backup_source;
@@ -124,7 +129,19 @@ create or replace package body iitd_lb_support_pkg as
         where source_type = p_source_type
           and source_name = p_source_name
           and source_version = p_version_number;
-        execute immediate 'create or replace ' || source_to_restore.text;
+        if (upper(p_source_type) = 'VIEW') then
+            execute immediate 'create or replace view ' || source_to_restore.source_name || ' AS '||source_to_restore.text;
+        else
+            execute immediate 'create or replace ' || source_to_restore.text;
+        end if;
+    EXCEPTION
+        when OTHERS then
+            -- Catch Success with Compilation Error and ignore. When rolling back PL/SQL packages, the body is reverted
+            -- first and if is paired with a Spec change it will fail until the Spec is rolled back too. The recompile
+            -- happens after the rollback.
+            if SQLCODE <> -24344 then
+                raise;
+            end if;
     end;
 
     -- Functions to generate and clear schema state data
