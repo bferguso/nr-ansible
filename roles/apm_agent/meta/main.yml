@@ -2,5 +2,4 @@
 dependencies:
   - name: hashicorp_envconsul
   - name: hashicorp_vault
-  - name: s6
   - name: jq
