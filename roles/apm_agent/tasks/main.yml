@@ -4,8 +4,6 @@
 - import_role:
     name: hashicorp_vault
 - import_role:
-    name: s6
-- import_role:
     name: jq
 - name: Check for vault broker token
   assert:
