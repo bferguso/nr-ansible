@@ -15,7 +15,8 @@ RUN curl -L -s ${CMAKE_URL} | tar xzv -C . --strip-components 1 && \
 
 # Fluent-bit
 WORKDIR /tmp/fluent-bit
-ENV FLUENT_BIT_VERSION 1.8.10
+ARG FLUENT_BIT_VERSION
+ENV FLUENT_BIT_VERSION=$FLUENT_BIT_VERSION
 ENV FLUENT_BIT_URL https://github.com/fluent/fluent-bit/archive/refs/tags/v${FLUENT_BIT_VERSION}.tar.gz
 RUN curl -L -s "${FLUENT_BIT_URL}" | tar xzv -C . --strip-components 1
 RUN cd build && \
