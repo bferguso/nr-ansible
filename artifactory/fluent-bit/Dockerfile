@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi7
 
 # Prerequisites
-RUN yum install -y gcc-c++ gzip make openssl openssl-devel postgresql-libs tar which
+RUN yum install -y gcc-c++ gzip make openssl openssl-devel postgresql-libs tar which libyaml
 RUN yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/bison-3.0.4-2.el7.x86_64.rpm && \
     yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/flex-2.5.37-6.el7.x86_64.rpm
 
@@ -19,6 +19,7 @@ ARG FLUENT_BIT_VERSION
 ENV FLUENT_BIT_VERSION=$FLUENT_BIT_VERSION
 ENV FLUENT_BIT_URL https://github.com/fluent/fluent-bit/archive/refs/tags/v${FLUENT_BIT_VERSION}.tar.gz
 RUN curl -L -s "${FLUENT_BIT_URL}" | tar xzv -C . --strip-components 1
+RUN yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/libyaml-devel-0.1.4-11.el7_0.x86_64.rpm
 RUN cd build && \
     cmake ../ && \
     make && \

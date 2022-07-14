@@ -17,5 +17,5 @@ podman cp fb-origin:/dropbox/fluent-bit.tar.gz .
 podman rm -fv fb-origin
 
 # Artifactory instructions
-echo -e "\nUpload to Artifactory:"
-curl -X PUT -u "${ARTIFACTORY_USER}:${ARTIFACTORY_PASS}" -T fluent-bit.tar.gz "https://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/fluent/fluent-bit/${FLUENT_BIT_VERSION}/fluent-bit.tar.gz"
+#echo -e "\nUpload to Artifactory:"
+#curl -X PUT -u "${ARTIFACTORY_USER}:${ARTIFACTORY_PASS}" -T fluent-bit.tar.gz "https://bwa.nrs.gov.bc.ca/int/artifactory/ext-binaries-local/fluent/fluent-bit/${FLUENT_BIT_VERSION}/fluent-bit.tar.gz"
