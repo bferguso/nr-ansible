@@ -27,6 +27,6 @@ RUN cd build && \
 
 WORKDIR /dropbox
 RUN mkdir ./fluent-bit && \
-    cp /usr/local/bin/fluent-bit /usr/lib64/libpq.so.5 ./fluent-bit && \
+    cp /usr/local/bin/fluent-bit /usr/lib64/libpq.so.5 /usr/lib64/libyaml-0.so.2 ./fluent-bit && \
     tar -czvf fluent-bit.tar.gz fluent-bit && \
     rm -rf ./fluent-bit
