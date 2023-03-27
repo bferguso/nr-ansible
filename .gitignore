@@ -1,2 +1,3 @@
 tests/inventory/group_vars/all.yml
 *.tar.gz
+.DS_Store
