@@ -8,7 +8,11 @@
 
 # Required
 lb_deploy_scripts_user: "{{ deploy_scripts_user | default('runner') }}"
-lb_app_artifactory_url: "{{ app_artifactory_url | default('https://bwa.nrs.gov.bc.ca/pub/artifactory') }}"
+
+lb_app_artifactory_url: "{{ app_artifactory_url | default('https://bwa.nrs.gov.bc.ca/int/artifactory/libs-staging-local') }}"
+lb_app_artifactory_snapshot_url: "{{ app_artifactory_snapshot_url | default('https://bwa.nrs.gov.bc.ca/int/artifactory/libs-snapshot-local') }}"
+
+lb_app_artifactory_download_url: "{{ ((cd_version | regex_search('SNAPSHOT')) == 'SNAPSHOT') | ternary(lb_app_artifactory_snapshot_url, lb_app_artifactory_url) }}"
 
 lb_liquibase_staging_dir:  "{{ cd_app_home }}/liquibase"
 lb_liquibase_library_dir:  "{{ lb_liquibase_staging_dir }}/lib"
